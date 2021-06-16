@@ -1,0 +1,105 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml"><head><title>R: X3DF dataset</title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<link rel="stylesheet" type="text/css" href="R.css" />
+</head><body>
+
+<table width="100%" summary="page for X3dfDataset {XRisk}"><tr><td>X3dfDataset {XRisk}</td><td style="text-align: right;">R Documentation</td></tr></table>
+
+<h2>X3DF dataset</h2>
+
+<h3>Description</h3>
+
+<p>An <code><a href="X3dfDataset.html">X3dfDataset</a></code> <code><a href="../../R6/html/R6Class.html">R6Class</a></code> represents an
+indivudal X3DF dataset from a X3DF data source.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre>
+X3dfDataset
+</pre>
+
+
+<h3>Format</h3>
+
+<p>A <code><a href="../../R6/html/R6Class.html">R6Class</a></code> generator object</p>
+
+
+<h3>Details</h3>
+
+<p><code><a href="X3dfDataset.html">X3dfDataset</a></code> classes provide wrappers around X3DF datasets.
+They offer methods to examine the metadata of the dataset and to read the
+data of the dataset either completely or in chunks while applying a function
+to the individual chunks.
+</p>
+
+
+<h3>Fields</h3>
+
+
+<dl>
+<dt><code>name</code></dt><dd><p>The name of the dataset.</p>
+</dd>
+<dt><code>h5type</code></dt><dd><p>The native H5 type with which the dataset is stored.</p>
+</dd>
+<dt><code>size</code></dt><dd><p>The size of the dataset per scale.</p>
+</dd>
+<dt><code>chunksize</code></dt><dd><p>The size of chunks with which the data was stored.</p>
+</dd>
+<dt><code>x3type</code></dt><dd><p>The X3DF data type that was used to store the data.</p>
+</dd>
+<dt><code>scales</code></dt><dd><p>The scales to which the data refer.</p>
+</dd>
+<dt><code>max</code></dt><dd><p>The maximum value found in the dataset.</p>
+</dd>
+<dt><code>data</code></dt><dd><p>The data itself.</p>
+</dd>
+</dl>
+
+
+<h3>Methods</h3>
+
+
+<dl>
+<dt><code>new(d)</code></dt><dd><p>Creates a new <code>X3dfDataset</code> class around a H5
+dataset reference <code>d</code>. <code>X3dfDataset</code> objects are usually not
+created manually but by <code><a href="X3DF.html">X3DF</a></code> objects so that H5 handles
+do not have to be managed by the user.</p>
+</dd>
+<dt><code>print()</code></dt><dd><p>Produces a formatted output of the object that
+shows the metadata of the X3DF data set.</p>
+</dd>
+<dt><code>chunks(size)</code></dt><dd><p>Creates a chunk table with the individual
+chunks to be considered. <code>size</code> is a numeric vector that specifies
+the chunk size for every dimension of the dataset. If an element of the
+vector is specified as <code>NA</code>, the chunksize used when storing the
+data is used for the according dimension. A size of <code>Inf</code> results
+in chunks that span all elements of the according dimension.</p>
+</dd>
+<dt><code>chapply(over, fun, ..., chunks = NULL, level = "level")</code></dt><dd>
+<p>Applies the function <code>fun</code> over specified dimensions to every chunk
+of the X3DF dataset. <code>over</code> is a character vector that specifies
+over which dimensions the function is applied. Its elements must be
+some of the dataset's scales. The <code>...</code> arguments are passed to the
+function <code>fun</code>. <code>chunks</code> specifies the sizes of individual
+chunks and is passed to the object's <code>chunks</code> method to retrieve
+a chunk table. If <code>chunks</code> is <code>NULL</code>, <code>Inf</code> will be
+passed for every dimension in <code>over</code> and <code>NA</code> for every other
+dimension. If <code>fun</code> returns a named vector, the result of
+<code>chapply</code> will contain a column with the name of <code>level</code> that
+contains the names of the function's result vector. <code>chapply</code>
+returns a <code><a href="../../data.table/html/data.table.html">data.table</a></code> with the coordinates of the scales
+that were not included in <code>over</code>, a value column with the
+function's result and, possibly, a level column.</p>
+</dd>
+<dt><code>extract()</code></dt><dd><p>Extracts the value for the coordinates given in
+the <code>coords</code> vector from the dataset. If a single element of the
+vector is <code>NA</code>, all vectors along the according axis are returned.
+The return value is a data.table containing coordinates and values.</p>
+</dd>
+</dl>
+
+
+<hr /><div style="text-align: center;">[Package <em>XRisk</em> version 0.0.0.9002 <a href="00Index.html">Index</a>]</div>
+</body></html>

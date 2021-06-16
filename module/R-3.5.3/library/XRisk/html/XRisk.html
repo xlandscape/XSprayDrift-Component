@@ -1,0 +1,78 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml"><head><title>R: XRisk: Tools for risk assessments using Xplicit simulation...</title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<link rel="stylesheet" type="text/css" href="R.css" />
+</head><body>
+
+<table width="100%" summary="page for XRisk {XRisk}"><tr><td>XRisk {XRisk}</td><td style="text-align: right;">R Documentation</td></tr></table>
+
+<h2>XRisk: Tools for risk assessments using Xplicit simulation data</h2>
+
+<h3>Description</h3>
+
+<p>XRisk provides means of accessing data stored by Xplicit data
+providers in R. Currently, the HDF5-based x3df format is supported and
+data loaded from there can be aggregated over scales and in chunks,
+allowing large volumes to be processed in R. XRisk does also allow to
+define statistical populations and apply functions by these statistical
+populations on data in R data.tables. Finally, XRisk contains helper
+functions to read and write spatial and tabular data.
+</p>
+
+
+<h3>Data access</h3>
+
+<p>Access to Xplicit simulation data is organized by R6 classes:
+</p>
+
+<dl>
+<dt><code><a href="X3DF.html">X3DF</a></code></dt><dd><p>Represents a X3DF data source and provides
+methods to explore its contents.</p>
+</dd>
+<dt><code><a href="X3dfDataset.html">X3dfDataset</a></code></dt><dd><p>A individual dataset from a X3DF data
+source. Includes methods to retrieve data and metadata from the
+dataset.</p>
+</dd>
+</dl>
+
+
+
+<h3>Statistical populations</h3>
+
+<p>Statistical populations are prepared by a set of functions:
+</p>
+
+<dl>
+<dt><code><a href="statPop.html">statPop</a></code></dt><dd><p>Compiles a data.table containing definitions
+for statistical populations.</p>
+</dd>
+<dt><code><a href="allLevels.html">allLevels</a></code></dt><dd><p>Generates criteria to consider every unique
+level of a variable in a data.table as statistical population.</p>
+</dd>
+<dt><code><a href="intervals.html">intervals</a></code></dt><dd><p>Generates criteria to consider numerical
+interval ranges of a variable as statistical populations.</p>
+</dd>
+<dt><code><a href="spapply.html">spapply</a></code></dt><dd><p>Applies a function to all sttistical
+populations within a data.table.</p>
+</dd>
+</dl>
+
+
+
+<h3>Input and output</h3>
+
+<p>XRisk provides functions helping with input and output of data:
+</p>
+
+<dl>
+<dt><code><a href="readRasterMap.html">readRasterMap</a></code></dt><dd><p>Reads data from a raster file and
+outputs it in a data.table.</p>
+</dd>
+<dt><code><a href="writeRasterMap.html">writeRasterMap</a></code></dt><dd><p>Writes data to a raster file.</p>
+</dd>
+<dt><code><a href="writeToXlsx.html">writeToXlsx</a></code></dt><dd><p>Writes data to an xlsx workbook.</p>
+</dd>
+</dl>
+
+
+<hr /><div style="text-align: center;">[Package <em>XRisk</em> version 0.0.0.9002 <a href="00Index.html">Index</a>]</div>
+</body></html>

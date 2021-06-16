@@ -1,0 +1,72 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml"><head><title>R: Write xlsx file</title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<link rel="stylesheet" type="text/css" href="R.css" />
+</head><body>
+
+<table width="100%" summary="page for writeToXlsx {XRisk}"><tr><td>writeToXlsx {XRisk}</td><td style="text-align: right;">R Documentation</td></tr></table>
+
+<h2>Write xlsx file</h2>
+
+<h3>Description</h3>
+
+<p><code>writeToXlsx</code> writes data into xlsx workbooks.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre>
+writeToXlsx(data, file, author = "")
+</pre>
+
+
+<h3>Arguments</h3>
+
+<table summary="R argblock">
+<tr valign="top"><td><code>data</code></td>
+<td>
+<p>A list. Contains the data to write to the xlsx workbook.</p>
+</td></tr>
+<tr valign="top"><td><code>file</code></td>
+<td>
+<p>A character scalar. The file path to the output file.</p>
+</td></tr>
+<tr valign="top"><td><code>author</code></td>
+<td>
+<p>A character scalar. The author that is added as a metadatum to
+the workbook.</p>
+</td></tr>
+</table>
+
+
+<h3>Details</h3>
+
+<p>The <code>openxlsx</code> package must be installed for this function to work. The
+function writes different kind of data into a xlsx workbook. Every item of
+<code>x</code> is added as an own worksheet to the workbook where the names of
+<code>x</code> will be used as the names of the worksheets. If the data to be
+added to a worksheet is a character vector, each element of the vector will
+be written as an own paragraph into a cell in the first column. Paragraphs
+are separated by blank rows. Text is wrapped to 80 characters and each line
+will be written to a different row. Data given as a data.frame is passed
+as a whole to the <code><a href="../../openxlsx/html/writeDataTable.html">writeDataTable</a></code> function. Other
+types of data are written elementwise into the worksheet. The <code>author</code>
+is added as a metadatum to the workbook.
+</p>
+
+
+<h3>Examples</h3>
+
+<pre>
+## Not run: 
+writeToXlsx(
+  list(info = c("Test", "This is sample output"), data = runif(100)),
+  "C:/Temp/sample.xlsx",
+  "Author Sample"
+)
+
+## End(Not run)
+</pre>
+
+<hr /><div style="text-align: center;">[Package <em>XRisk</em> version 0.0.0.9002 <a href="00Index.html">Index</a>]</div>
+</body></html>

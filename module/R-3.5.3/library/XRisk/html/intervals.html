@@ -1,0 +1,76 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml"><head><title>R: Filter criteria for intervals</title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<link rel="stylesheet" type="text/css" href="R.css" />
+</head><body>
+
+<table width="100%" summary="page for intervals {XRisk}"><tr><td>intervals {XRisk}</td><td style="text-align: right;">R Documentation</td></tr></table>
+
+<h2>Filter criteria for intervals</h2>
+
+<h3>Description</h3>
+
+<p><code>intervals</code> generates a named character vector containing filter
+criteria for predefined intervals that can be used in the
+<code><a href="statPop.html">statPop</a></code> function.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre>
+intervals(col, lower, upper, add.na = NULL)
+</pre>
+
+
+<h3>Arguments</h3>
+
+<table summary="R argblock">
+<tr valign="top"><td><code>col</code></td>
+<td>
+<p>A character scalar. The name of the varaiable to which the
+criterium applies.</p>
+</td></tr>
+<tr valign="top"><td><code>lower</code></td>
+<td>
+<p>A numeric vector. The lower, exclusive boundaries of the
+intervals.</p>
+</td></tr>
+<tr valign="top"><td><code>upper</code></td>
+<td>
+<p>A numeric vector of the same length as <code>lower</code>. The upper,
+inclusive boundaries of the intervals.</p>
+</td></tr>
+<tr valign="top"><td><code>add.na</code></td>
+<td>
+<p>A scalar character. If not null, adds a criterium that selects
+all elements. Defaults to <code>NULL</code>.</p>
+</td></tr>
+</table>
+
+
+<h3>Details</h3>
+
+<p>Criteria are outputted in the format &quot;(a &gt; b &amp; c &lt;= b)&quot; where a are the
+values of <code>lower</code>, b the values of <code>upper</code> and c equals
+<code>col</code>. The names of the resulting vector are prepared using the format
+&quot;lower-upper&quot; where lower and upper are replaced accordingly. If a
+<code>add.na</code> is provided, it is prepended to the result as the value
+<code>TRUE</code> with name <code>add.na</code>.
+</p>
+
+
+<h3>Value</h3>
+
+<p>A named vector containing individual filter criteria for usage in
+the <code><a href="statPop.html">statPop</a></code> function.
+</p>
+
+
+<h3>Examples</h3>
+
+<pre>
+intervals("len", c(1, 1.5, 2), c(1.5, 2, 2.5), "any")
+</pre>
+
+<hr /><div style="text-align: center;">[Package <em>XRisk</em> version 0.0.0.9002 <a href="00Index.html">Index</a>]</div>
+</body></html>

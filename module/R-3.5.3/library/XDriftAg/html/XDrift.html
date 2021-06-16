@@ -1,0 +1,53 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml"><head><title>R: XDrift: Spray-drift Modeling Tools for Landscape-Scale...</title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<link rel="stylesheet" type="text/css" href="R.css" />
+</head><body>
+
+<table width="100%" summary="page for XDrift {XDriftAg}"><tr><td>XDrift {XDriftAg}</td><td style="text-align: right;">R Documentation</td></tr></table>
+
+<h2>XDrift: Spray-drift Modeling Tools for Landscape-Scale Ecotoxicological Risk
+Assessment</h2>
+
+<h3>Description</h3>
+
+<p>The X3 package currently provides topological functions and spray-drift
+models.
+</p>
+
+
+<h3>Topological functions</h3>
+
+<p>The <code><a href="bands.html">bands</a></code> function can be used
+to subdivide a plane into parallel bands of equal width. This is useful for
+applying variability of spray-drift models along field edges. The
+<code><a href="mindwdist.html">mindwdist</a></code> function calculates the minimum distances within a
+set of 2D-points where some points are defined as sources and the rest are
+considered possible sinks. Only distances along a wind trajectory are taken
+into consideration, so that the function returns the minimum distances of
+sinks downwind of sources. This function can be used to determine
+source-sink relationships in a spatial context.
+</p>
+
+
+<h3>Spray-drift models</h3>
+
+<p>The <code><a href="rautmann90.html">rautmann90</a></code> is an
+implementation of the official spray-drift exposure model developed by D.
+Rautmann [1]. The <code><a href="xspraydrift.html">xspraydrift</a></code> model is based on the same data
+as the <code><a href="rautmann90.html">rautmann90</a></code> model but returns values derived from
+density functions fitted independently for different groups of measurements
+at discrete distances. This allows incorporating variability of spray-drift
+exposure into simulations. The model is complemented by the
+<code><a href="xspraydriftparameters.html">xspraydriftparameters</a></code> function that lists the parameter sets
+used by the <code><a href="xspraydrift.html">xspraydrift</a></code> model.
+</p>
+
+
+<h3>References</h3>
+
+<p>[1] Abdrifteckwerte v. 27.03.2006 edited by Dirk
+Rautmann JKI.
+</p>
+
+<hr /><div style="text-align: center;">[Package <em>XDriftAg</em> version 1.0.0 <a href="00Index.html">Index</a>]</div>
+</body></html>
