@@ -1,0 +1,11 @@
+XDrift                  XDrift: Spray-drift Modeling Tools for
+                        Landscape-Scale Ecotoxicological Risk
+                        Assessment
+bands                   Dividing a plane into bands
+mindwdist               Calculate the minimum downwind distance between
+                        sources and sinks
+rautmann90              Calculating spray-drift exposure according to
+                        Rautmann (90th percentile)
+xspraydrift             Calculating spray-drift exposure with the
+                        XSprayDrift model
+xspraydriftparameters   XSprayDrift distribution parameters

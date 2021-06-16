@@ -1,0 +1,80 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml"><head><title>R: Applying to statistical populations</title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<link rel="stylesheet" type="text/css" href="R.css" />
+</head><body>
+
+<table width="100%" summary="page for spapply {XRisk}"><tr><td>spapply {XRisk}</td><td style="text-align: right;">R Documentation</td></tr></table>
+
+<h2>Applying to statistical populations</h2>
+
+<h3>Description</h3>
+
+<p><code>spapply</code> applies a function to statistical populations retrieved from
+a <code><a href="../../data.table/html/data.table.html">data.table</a></code>.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre>
+spapply(x, statPop, fun)
+</pre>
+
+
+<h3>Arguments</h3>
+
+<table summary="R argblock">
+<tr valign="top"><td><code>x</code></td>
+<td>
+<p>A data.table. Contains the entire data that is analyzed.</p>
+</td></tr>
+<tr valign="top"><td><code>statPop</code></td>
+<td>
+<p>A data.table. Specifies individual statistical populations to
+which <code>fun</code> is applied. Commonly the output of the <code>statPop</code>
+function.</p>
+</td></tr>
+<tr valign="top"><td><code>fun</code></td>
+<td>
+<p>A function. The function that is applied to each statistical
+population defined by <code>statPop</code>.</p>
+</td></tr>
+</table>
+
+
+<h3>Details</h3>
+
+<p><code>fun</code> is called for every statistical population in <code>x</code>. The
+statistical population is retrieved from <code>x</code> by evaluating the filter
+criteria stored in a column <code>.def</code> within <code>statPop</code>. The result
+value of the function is prepended by the other columns present in
+<code>statPop</code> to identify the statistical population the result value
+applies to.
+</p>
+
+
+<h3>Value</h3>
+
+<p>A list of <code><a href="../../data.table/html/data.table.html">data.table</a></code>s. Each list item contains the
+result for one statistical population.
+</p>
+
+
+<h3>Examples</h3>
+
+<pre>
+data &lt;- data.table::data.table(
+  group = sample(1:5, 100, TRUE),
+  len = rnorm(100, 1.5, .5),
+  val = rnorm(100)
+)
+sp &lt;- statPop(
+  group = allLevels(data, group, "all"),
+  len = intervals("len", c(1, 1.5, 2), c(1.5, 2, 2.5), "any")
+)
+data.table::rbindlist(
+  spapply(data, sp, function(dt) { dt[, .(mean = mean(val))] }))
+</pre>
+
+<hr /><div style="text-align: center;">[Package <em>XRisk</em> version 0.0.0.9002 <a href="00Index.html">Index</a>]</div>
+</body></html>

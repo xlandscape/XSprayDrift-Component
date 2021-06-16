@@ -1,0 +1,139 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml"><head><title>R: Calculating spray-drift exposure with the XSprayDrift model</title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<link rel="stylesheet" type="text/css" href="R.css" />
+</head><body>
+
+<table width="100%" summary="page for xspraydrift {XDrift}"><tr><td>xspraydrift {XDrift}</td><td style="text-align: right;">R Documentation</td></tr></table>
+
+<h2>Calculating spray-drift exposure with the XSprayDrift model</h2>
+
+<h3>Description</h3>
+
+<p><code>xspraydrift</code> calculates spray-drift exposure of receptors downwind of
+an exposure source. The function is based on the same measurement data as the
+<code><a href="rautmann90.html">rautmann90</a></code> function but uses fitted probability density
+functions for each distance with measurements. It can be used as a
+replacement for the <code><a href="rautmann90.html">rautmann90</a></code> function in scenarios where
+variability along the field-edge should be preserved.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre>
+xspraydrift(
+  distance,
+  q = stats::runif(1),
+  target.exposure = NA_real_,
+  crop = "arable",
+  pdf.type = c("gamma", "normal", "lognormal", "beta", "uniform"),
+  distance.bins = c("mean", "worst", "interpolated"),
+  group = NULL
+)
+</pre>
+
+
+<h3>Arguments</h3>
+
+<table summary="R argblock">
+<tr valign="top"><td><code>distance</code></td>
+<td>
+<p>A numeric vector of distances in meters. May contain NAs.</p>
+</td></tr>
+<tr valign="top"><td><code>q</code></td>
+<td>
+<p>A numeric scalar specifying the quantile of the density function
+used for determining exposure. Must be in the interval [0; 1].</p>
+</td></tr>
+<tr valign="top"><td><code>target.exposure</code></td>
+<td>
+<p>A numeric scalar specifying the exposure that is
+reported for distances of 0.</p>
+</td></tr>
+<tr valign="top"><td><code>crop</code></td>
+<td>
+<p>Specifies the crop that is applied. See
+<code><a href="xspraydriftparameters.html">xspraydriftparameters</a></code> for possible values.</p>
+</td></tr>
+<tr valign="top"><td><code>pdf.type</code></td>
+<td>
+<p>Specifies the type of distribution to use. Must be
+<code>"gamma"</code>, <code>"normal"</code>, <code>"lognormal"</code>, <code>"beta"</code> or
+<code>"uniform"</code>.</p>
+</td></tr>
+<tr valign="top"><td><code>distance.bins</code></td>
+<td>
+<p>Specifies the delineation method of distance classes.
+Must be <code>"mean"</code> for a delineation of classes in the middle between
+base measurement distances, <code>"worst"</code> for delineation at the
+measurement distances or <code>"interpolated"</code> to apply a linear regression
+between the nearest base mesurements.</p>
+</td></tr>
+<tr valign="top"><td><code>group</code></td>
+<td>
+<p>Allows to specify an a priori group on which the distribution
+parameters are based. Possible values are &quot;1-1-1&quot;, &quot;1-1-2&quot;, &quot;1-1-3&quot;,
+&quot;1-1-4&quot;, &quot;1-2-1&quot;, &quot;1-2-2&quot;, &quot;1-3-1&quot;, &quot;2-1-1&quot;, &quot;2-1-2&quot;, &quot;2-1-4&quot;, &quot;2-2-1&quot;,
+&quot;2-2-2&quot;, &quot;2-2-3&quot; and &quot;2-3-1&quot;, although not all groups are available for all
+crops. Refer to <em>XDrift – An R Package to Simulate Spatially Explicit
+Pesticide Spray-drift Exposure of Non-Target-Species Habitats at Landscape
+Scales, Supplementary Online Material</em> for details. If <code>group</code> is
+<code>NULL</code>, a lumped parameterization for the specified crop is used.</p>
+</td></tr>
+</table>
+
+
+<h3>Details</h3>
+
+<p>The <code>xspraydrift</code> function works with a vector of distances in meters.
+Each distance is internally translated into a distance class according to the
+<code>crop</code> and <code>distance.bins</code> (see <code><a href="xspraydriftparameters.html">xspraydriftparameters</a></code>
+for more details). Distances below the lower boundary of the first distance
+bin are considered to be actually a distance equal this lower boundary. Each
+distance class is associated with a parameter set for a distribution where
+the type of distribution is determined by the <code>pdf.type</code> argument (see
+also <code><a href="xspraydriftparameters.html">xspraydriftparameters</a></code>) and, from this distribution, the
+quantile specified by <code>q</code> is sampled. The resulting value is returned as
+the fraction of exposure received by a sink located in the specified
+<code>distance</code>. For a distance of 0, the value of <code>target.exposure</code> is
+returned. A <code>distance</code> of <code>NA</code> results in a fraction of exposure of
+0. This treatment of distances that are not positive numbers is in
+accordance with the topological functions of the <code>XDrift</code> package. By
+default, the parameters of the sampled distribution are derived from all
+experiments conducted on the specified <code>crop</code> using a lumped approach.
+By specifying the <code>group</code> argument, the distribution parameters can be
+restricted to an a priori defined group of experiments on the same crop,
+sharing similar spray pressure, wind speed and spraying technology. Please
+refer to <em>XDrift – An R Package to Simulate Spatially Explicit
+Pesticide Spray-drift Exposure of Non-Target-Species Habitats at Landscape
+Scales, Supplementary Online Material</em> for details.
+</p>
+
+
+<h3>Value</h3>
+
+<p>A vector of the length of <code>distance</code> that indicates the fraction
+of exposure at the given distances. Target receptors receive a value of
+<code>target.exposure</code>. Receptors with a <code>distance</code> of 0 result in a
+fraction of <code>NA</code>.
+</p>
+
+
+<h3>See Also</h3>
+
+<p><code><a href="xspraydriftparameters.html">xspraydriftparameters</a></code> for distribution parameters
+</p>
+<p>Other spray-drift function: 
+<code><a href="rautmann90.html">rautmann90</a>()</code>
+</p>
+
+
+<h3>Examples</h3>
+
+<pre>
+distances &lt;- c(NA, 0:49)
+xspraydrift(distances)
+</pre>
+
+<hr /><div style="text-align: center;">[Package <em>XDrift</em> version 1.0.9999 <a href="00Index.html">Index</a>]</div>
+</body></html>

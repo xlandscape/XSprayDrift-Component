@@ -1,0 +1,23 @@
+citHeader("To cite XDrift in publications use:")
+
+citEntry(entry = "Article",
+  title        = paste("{XDrift} - An R Package to Simulate Spatially Explicit",
+                       "Pesticide Spray-drift Exposure of Non-Target-Species",
+                       "Habitats at Landscape Scales"),
+  author       = personList(as.person("Sascha Bub"),
+                            as.person("Thorsten Schad")),
+  journal      = "SoftwareX",
+  year         = "2019",
+  volume       = "??",
+  number       = "??",
+  pages        = "??",
+  url          = "??",
+
+  textVersion  =
+  paste("Sascha Bub, Thorsten Schad (2019).",
+        "XDrift - An R Package to Simulate Spatially Explicit",
+        "Pesticide Spray-drift Exposure of Non-Target-Species",
+        "Habitats at Landscape Scales",
+        "SoftwareX, ??(??), ??-??.",
+        "URL ??.")
+)

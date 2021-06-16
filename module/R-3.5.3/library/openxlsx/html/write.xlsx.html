@@ -1,0 +1,240 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml"><head><title>R: write data to an xlsx file</title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<link rel="stylesheet" type="text/css" href="R.css" />
+</head><body>
+
+<table width="100%" summary="page for write.xlsx {openxlsx}"><tr><td>write.xlsx {openxlsx}</td><td style="text-align: right;">R Documentation</td></tr></table>
+
+<h2>write data to an xlsx file</h2>
+
+<h3>Description</h3>
+
+<p>write a data.frame or list of data.frames to an xlsx file
+</p>
+
+
+<h3>Usage</h3>
+
+<pre>
+write.xlsx(x, file, asTable = FALSE, ...)
+</pre>
+
+
+<h3>Arguments</h3>
+
+<table summary="R argblock">
+<tr valign="top"><td><code>x</code></td>
+<td>
+<p>object or a list of objects that can be handled by <code><a href="writeData.html">writeData</a></code> to write to file</p>
+</td></tr>
+<tr valign="top"><td><code>file</code></td>
+<td>
+<p>xlsx file name</p>
+</td></tr>
+<tr valign="top"><td><code>asTable</code></td>
+<td>
+<p>write using writeDataTable as opposed to writeData</p>
+</td></tr>
+<tr valign="top"><td><code>...</code></td>
+<td>
+<p>optional parameters to pass to functions:
+</p>
+
+<ul>
+<li><p>createWorkbook
+</p>
+</li>
+<li><p>addWorksheet
+</p>
+</li>
+<li><p>writeData
+</p>
+</li>
+<li><p>freezePane
+</p>
+</li>
+<li><p>saveWorkbook
+</p>
+</li></ul>
+
+<p>see details.</p>
+</td></tr>
+</table>
+
+
+<h3>Details</h3>
+
+<p>Optional parameters are:
+</p>
+<p><b>createWorkbook Parameters</b>
+</p>
+
+<ul>
+<li><p><b>creator</b> A string specifying the workbook author
+</p>
+</li></ul>
+
+<p><b>addWorksheet Parameters</b>
+</p>
+
+<ul>
+<li><p><b>sheetName</b> Name of the worksheet
+</p>
+</li>
+<li><p><b>gridLines</b> A logical. If <code>FALSE</code>, the worksheet grid lines will be hidden.
+</p>
+</li>
+<li><p><b>tabColour</b> Colour of the worksheet tab. A valid colour (belonging to colours())
+or a valid hex colour beginning with &quot;#&quot;.
+</p>
+</li>
+<li><p><b>zoom</b> A numeric between 10 and 400. Worksheet zoom level as a percentage.
+</p>
+</li></ul>
+
+<p><b>writeData/writeDataTable Parameters</b>
+</p>
+
+<ul>
+<li><p><b>startCol</b> A vector specifying the starting column(s) to write df
+</p>
+</li>
+<li><p><b>startRow</b> A vector specifying the starting row(s) to write df
+</p>
+</li>
+<li><p><b>xy</b> An alternative to specifying startCol and startRow individually.
+A vector of the form c(startCol, startRow)
+</p>
+</li>
+<li><p><b>colNames or col.names</b> If <code>TRUE</code>, column names of x are written.
+</p>
+</li>
+<li><p><b>rowNames or row.names</b> If <code>TRUE</code>, row names of x are written.
+</p>
+</li>
+<li><p><b>headerStyle</b> Custom style to apply to column names.
+</p>
+</li>
+<li><p><b>borders</b> Either &quot;surrounding&quot;, &quot;columns&quot; or &quot;rows&quot; or NULL.  If &quot;surrounding&quot;, a border is drawn around the
+data.  If &quot;rows&quot;, a surrounding border is drawn a border around each row. If &quot;columns&quot;, a surrounding border is drawn with a border
+between each column.  If &quot;<code>all</code>&quot; all cell borders are drawn.
+</p>
+</li>
+<li><p><b>borderColour</b> Colour of cell border
+</p>
+</li>
+<li><p><b>borderStyle</b> Border line style.
+</p>
+</li>
+<li><p><b>keepNA</b> If <code>TRUE</code>, NA values are converted to #N/A (or <code>na.string</code>, if not NULL) in Excel, else NA cells will be empty. Defaults to FALSE.
+</p>
+</li>
+<li><p><b>na.string</b> If not NULL, and if <code>keepNA</code> is <code>TRUE</code>, NA values are converted to this string in Excel. Defaults to NULL.
+</p>
+</li></ul>
+
+<p><b>freezePane Parameters</b>
+</p>
+
+<ul>
+<li><p><b>firstActiveRow</b> Top row of active region to freeze pane.
+</p>
+</li>
+<li><p><b>firstActiveCol</b> Furthest left column of active region to freeze pane.
+</p>
+</li>
+<li><p><b>firstRow</b> If <code>TRUE</code>, freezes the first row (equivalent to firstActiveRow = 2)
+</p>
+</li>
+<li><p><b>firstCol</b> If <code>TRUE</code>, freezes the first column (equivalent to firstActiveCol = 2)
+</p>
+</li></ul>
+
+<p><b>colWidths Parameters</b>
+</p>
+
+<ul>
+<li><p><b>colWidths</b> Must be value &quot;auto&quot;. Sets all columns containing data to auto width.
+</p>
+</li></ul>
+
+<p><b>saveWorkbook Parameters</b>
+</p>
+
+<ul>
+<li><p><b>overwrite</b> Overwrite existing file (Defaults to TRUE as with write.table)
+</p>
+</li></ul>
+
+<p>columns of x with class Date or POSIXt are automatically
+styled as dates and datetimes respectively.
+</p>
+
+
+<h3>Value</h3>
+
+<p>A workbook object
+</p>
+
+
+<h3>Author(s)</h3>
+
+<p>Alexander Walker
+</p>
+
+
+<h3>See Also</h3>
+
+<p><code><a href="addWorksheet.html">addWorksheet</a></code>
+</p>
+<p><code><a href="writeData.html">writeData</a></code>
+</p>
+<p><code><a href="createStyle.html">createStyle</a></code> for style parameters
+</p>
+
+
+<h3>Examples</h3>
+
+<pre>
+
+## write to working directory
+options("openxlsx.borderColour" = "#4F80BD") ## set default border colour
+## Not run: 
+write.xlsx(iris, file = "writeXLSX1.xlsx", colNames = TRUE, borders = "columns")
+write.xlsx(iris, file = "writeXLSX2.xlsx", colNames = TRUE, borders = "surrounding")
+
+## End(Not run)
+
+
+hs &lt;- createStyle(
+  textDecoration = "BOLD", fontColour = "#FFFFFF", fontSize = 12,
+  fontName = "Arial Narrow", fgFill = "#4F80BD"
+)
+## Not run: 
+write.xlsx(iris,
+  file = "writeXLSX3.xlsx",
+  colNames = TRUE, borders = "rows", headerStyle = hs
+)
+
+## End(Not run)
+
+## Lists elements are written to individual worksheets, using list names as sheet names if available
+l &lt;- list("IRIS" = iris, "MTCATS" = mtcars, matrix(runif(1000), ncol = 5))
+## Not run: 
+write.xlsx(l, "writeList1.xlsx", colWidths = c(NA, "auto", "auto"))
+
+## End(Not run)
+
+## different sheets can be given different parameters
+## Not run: 
+write.xlsx(l, "writeList2.xlsx",
+  startCol = c(1, 2, 3), startRow = 2,
+  asTable = c(TRUE, TRUE, FALSE), withFilter = c(TRUE, FALSE, FALSE)
+)
+
+## End(Not run)
+
+</pre>
+
+<hr /><div style="text-align: center;">[Package <em>openxlsx</em> version 4.1.5 <a href="00Index.html">Index</a>]</div>
+</body></html>
