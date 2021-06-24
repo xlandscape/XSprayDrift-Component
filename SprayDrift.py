@@ -16,6 +16,7 @@ class SprayDrift(base.Component):
     """
     # RELEASES
     VERSION = base.VersionCollection(
+        base.VersionInfo("2.0.3", "2021-06-21"),
         base.VersionInfo("2.0.2", "2020-12-07"),
         base.VersionInfo("2.0.1", "2020-12-03"),
         base.VersionInfo("2.0.0", "2020-10-22"),
@@ -86,6 +87,7 @@ class SprayDrift(base.Component):
     VERSION.added("2.0.1", "README, LICENSE, CHANGELOG, CONTRIBUTING")
     VERSION.changed("2.0.2", "Line separators in LICENSE")
     VERSION.changed("2.0.2", "Corrections in changelog and in README")
+    VERSION.changed("2.0.3", "Updated documentation and data type access")
 
     def __init__(self, name, observer, store):
         super(SprayDrift, self).__init__(name, observer, store)
