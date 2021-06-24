@@ -410,7 +410,7 @@ class SprayDrift(base.Component):
         self.outputs["Exposure"].set_values(
             np.ndarray,
             shape=data_set.shape,
-            dtype=data_set.dtype,
+            data_type=data_set.dtype,
             chunks=data_set.chunks,
             scales=scales,
             unit=self._application_rate_unit

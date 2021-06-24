@@ -25,7 +25,7 @@ the `XDrift` R package ([https://doi.org/10.1016/j.softx.2020.100610](https://do
 
 
 ## Getting Started
-The component is intended to be used within Landscape Models that require simulation of spray-drift.
+The component can be used within Landscape Models that require simulation of spray-drift.
 
 ### Prerequisites
 A fully set up Landscape Model variant. See the Landscape Model core `README` for further details.
@@ -97,12 +97,12 @@ for further details on the component's interface.
 ### Inputs
 * `ProcessingPath` - The working directory for all files exchange with the module. A string with global scale. Value has
   no unit.
-* `SimulationStart` - The first date simulated. A datetime.date with global scale. Value has no unit.
-* `SimulationEnd` - The last date simulated. A datetime.date with global scale. Value has no unit.
+* `SimulationStart` - The first date simulated. A `datetime.date` with global scale. Value has no unit.
+* `SimulationEnd` - The last date simulated. A `datetime.date` with global scale. Value has no unit.
 * `Geometries` - The base geometries of the simulated landscape in WKB representation. A list\[bytes\] with scale
   space/base_geometry. Values have no unit.
-* `GeometryCrs` - The coordinate reference in which the geometries are represented, given in PROJ4 notations. A string
-  with global scale. Value has no unit.
+* `GeometryCrs` - The coordinate reference system of the geometries, given in PROJ4 notations. A string with global 
+  scale. Value has no unit.
 * `Extent` - The extent of the simulated region given as four coordinates (x-min, y-min, x-max, y-max). A tuple\[float\]
   with global scale. Values have unit metre.
 * `HabitatLulcTypes` - A comma-space separated list of numerical identifiers relating to habitat LULC types. A string
@@ -128,14 +128,14 @@ for further details on the component's interface.
 * `AppliedFields` - The identifiers of the applied fields. A NumPy array with scale other/application. Values have no 
   unit. 
 * `AppliedDates` - The dates of application. A NumPy array with scale other/application. Values have no unit.
-* `ApplicationRates` - The rates at which the substance is applied. A NumPy array with scale other/application. Values
-  have a unit of g/ha. 
+* `ApplicationRates` - The application rates of the substance. A NumPy array with scale other/application. Values have a
+  unit of g/ha. 
 * `TechnologyDriftReductions` - The fraction of drift-reduction due to spray-technology. A NumPy array with scale 
   other/application. Values have a unit of 1.
 * `AppliedArea` - The spatial extent of applied areas in WKB representation. A list\[bytes\] scale other/application. 
   Values have no unit.
-* `SpatialOutputScale` - Defines the spatial scale at which exposure is output, either 1sqm or base_geometry. A string 
-  with global scale. Value has no unit.
+* `SpatialOutputScale` - Defines the spatial output scale, either 1sqm or base_geometry. A string  with global scale. 
+  Value has no unit.
 * `RandomSeed` - A fixed random seed or 0 for no random seed. An int with global scale. Value has no unit.
 * `FilteringLulcTypes` - The LULC types that are able to filter spray-drift. A list\[int\] with global scale. Values
   have no unit.
@@ -159,7 +159,7 @@ exposure values in the unit of the application rate.
 
 
 ## Roadmap
-The `XSprayDrift` component is considered stable. No further development is planned at the moment.
+The `XSprayDrift` component is stable. No further development takes place at the moment.
 
 
 ## Contributing
