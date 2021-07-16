@@ -19,7 +19,7 @@ This list contains all additions, changes and fixes for the XSprayDrift module.
 ## [1.15] - 2020-01-08
 ### Added
 ### Changed
-- Less messages from module
+- Fewer messages from module
 ### Fixed
 
 
@@ -112,7 +112,7 @@ This list contains all additions, changes and fixes for the XSprayDrift module.
 ### Added
 ### Changed
 ### Fixed
-- No longer stops execution if no habitat within 50m of field
+- No longer stops execution if no habitat within 50 m of field
 
 
 ## [1.1]
