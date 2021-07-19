@@ -1,5 +1,15 @@
 # Changelog
-This is the changelog for the XSprayDrift component. It was automatically created on 2021-06-24.
+This is the changelog for the XSprayDrift component. It was automatically created on 2021-07-19.
+
+## [2.0.4] - 2021-07-19
+
+### Added
+
+### Changed
+- Updated module to version 2.2
+
+### Fixed
+
 
 ## [2.0.3] - 2021-06-21
 
@@ -50,7 +60,7 @@ This is the changelog for the XSprayDrift component. It was automatically create
 ### Added
 
 ### Changed
-- component.SprayDrift sets R\_LIBS and R\_LIBS\_USER environment variables
+- component.SprayDrift sets R_LIBS and R_LIBS_USER environment variables
 
 ### Fixed
 
