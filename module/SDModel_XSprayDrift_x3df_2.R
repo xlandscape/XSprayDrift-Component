@@ -312,7 +312,7 @@ if (spatial_output_scale == "base_geometry") {
   exposure <- data.table(x = idx[, 1], y = idx[, 2], t = exposure[, t], exposure = exposure[, exposure])
   setkeyv(exposure, c("x", "y"))
   pbsapply(1:ncol(lulc_type), function(i) {
-    if (`in`(lulc_type[i], habitat_types)) {
+    if (`%in%`(lulc_type[i], habitat_types)) {
       habitat <- geometries[i,]
       r <- raster::raster(xmn = habitat@bbox[1,1],
         xmx = habitat@bbox[1,2],

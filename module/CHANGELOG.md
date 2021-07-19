@@ -2,6 +2,13 @@
 This list contains all additions, changes and fixes for the XSprayDrift module.
 
 
+## [2.3] - 2021-07-19
+### Added
+### Changed
+### Fixed
+- Error introduced during last re-factory
+
+
 ## [2.2] - 2021-07-19
 ### Added
 ### Changed
