@@ -119,14 +119,14 @@ ppmsf@data$Wind.dir <- ifelse(is.na(ppmsf@data$Wind.dir), 0, ppmsf@data$Wind.dir
 # Get base geometries and habitats
 geometries <- base_geometry$get_geometries()
 habitat_types <- as.integer(strsplit(habitat_lulc_types, ", ", TRUE)[[1]])
-habitats <- subset(geometries, lulc_type[1,] %in% habitat_types)
+habitats <- subset(geometries, `%in%`(lulc_type[1,], habitat_types))
 
 # Get filtering parameters
 filtering_types <- as.integer(strsplit(filtering_lulc_types, ", ", TRUE)[[1]])
 if (!is.na(filtering_types)) {
   filter_min_width <- as.numeric(filtering_min_width)
   filter_fraction <- as.numeric(filtering_fraction)
-  filterveg <- subset(geometries, lulc_type[1,] %in% filtering_types)
+  filterveg <- subset(geometries, `%in%`(lulc_type[1,], filtering_types))
 }
 
 # Prepare the exposure data
@@ -143,7 +143,7 @@ exposure <- pblapply(1:nrow(ppmsf), function(i) {
   applied_geom_bbox <- bbox(applied_geom)  
   lroi_bbox <- applied_geom_bbox + matrix(c(-50, -50, 50, 50), 2, 2)
   if (spatial_output_scale == "1sqm") {
-    lroi_bbox <- lroi_bbox + matrix(origin, 2, 2) %% 1 - lroi_bbox %% 1
+    lroi_bbox <- lroi_bbox + `%%`(matrix(origin, 2, 2), 1) - `%%`(lroi_bbox, 1)
   }
   lroi_bbox <- matrix(
     c(
@@ -186,15 +186,15 @@ exposure <- pblapply(1:nrow(ppmsf), function(i) {
                   ep]
   
       # Distance variability at the field scale
-      dist.var.field <- rnorm(1, sd = field_dist_sd[1, 1])
+      dist_var_field <- rnorm(1, sd = field_dist_sd[1, 1])
   
       # Distance variability at the EP scale
-      dist.var <-
-        dist[, list(offset = rnorm(1, sd = ep_dist_sd [1, 1]) + dist.var.field), ep]
+      dist_var <-
+        dist[, list(offset = rnorm(1, sd = ep_dist_sd [1, 1]) + dist_var_field), ep]
   
       setkey(dist, ep)
-      setkey(dist.var, ep)
-      dist <- dist.var[dist]
+      setkey(dist_var, ep)
+      dist <- dist_var[dist]
       dist[dist > 0,
            dist := ifelse(dist + offset > min_dist[1, 1],
                           dist + offset,
@@ -279,7 +279,7 @@ exposure <- pblapply(1:nrow(ppmsf), function(i) {
           idx <- exposure_appl[, scale_1sqm$t(cbind(x + 1, y + 1))]
           exposure_appl[, c("i", "j") := .(idx[, 1], idx[, 2])]
           exposure_appl <- exposure_appl[
-            i %between% c(1, exposure_ds$.f@dim[2]) & j %between% c(1, exposure_ds$.f@dim[3])
+            `between`(i, c(1, exposure_ds$.f@dim[2])) & `between`(j, c(1, exposure_ds$.f@dim[3]))
           ]
           ll <- exposure_appl[, cbind(min(i), min(j))]
           ru <- exposure_appl[, cbind(max(i), max(j))]
@@ -312,7 +312,7 @@ if (spatial_output_scale == "base_geometry") {
   exposure <- data.table(x = idx[, 1], y = idx[, 2], t = exposure[, t], exposure = exposure[, exposure])
   setkeyv(exposure, c("x", "y"))
   pbsapply(1:ncol(lulc_type), function(i) {
-    if (lulc_type[i] %in% habitat_types) {
+    if (`in`(lulc_type[i], habitat_types)) {
       habitat <- geometries[i,]
       r <- raster::raster(xmn = habitat@bbox[1,1],
         xmx = habitat@bbox[1,2],

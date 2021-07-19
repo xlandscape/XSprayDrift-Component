@@ -2,6 +2,15 @@
 This list contains all additions, changes and fixes for the XSprayDrift module.
 
 
+## [2.2] - 2021-07-19
+### Added
+### Changed
+- Code style refactoring of R script
+- Minor changes in changelog
+
+### Fixed
+
+
 ## [2.1] - 2020-12-02
 ### Added
 - README, LICENSE, CHANGELOG and CONTRIBUTION
@@ -12,14 +21,14 @@ This list contains all additions, changes and fixes for the XSprayDrift module.
 ## [2.0] - 2020-05-20
 ### Added
 ### Changed
-- Updated to xdrift R package 1.0.9999
+- Updated to `xdrift` R package 1.0.9999
 ### Fixed
 
 
 ## [1.15] - 2020-01-08
 ### Added
 ### Changed
-- Less messages from module
+- Fewer messages from module
 ### Fixed
 
 
@@ -68,7 +77,7 @@ This list contains all additions, changes and fixes for the XSprayDrift module.
 ## [1.8]
 ### Added
 ### Changed
-- Updated module's R packages, including xdrift (now v0.1.1)
+- Updated module's R packages, including `xdrift` (now v0.1.1)
 ### Fixed
 
 
@@ -112,7 +121,7 @@ This list contains all additions, changes and fixes for the XSprayDrift module.
 ### Added
 ### Changed
 ### Fixed
-- No longer stops execution if no habitat within 50m of field
+- No longer stops execution if no habitat within 50 m of field
 
 
 ## [1.1]
