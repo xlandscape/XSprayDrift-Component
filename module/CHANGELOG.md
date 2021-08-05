@@ -64,7 +64,7 @@ This list contains all additions, changes and fixes for the XSprayDrift module.
 ### Added
 ### Changed
 ### Fixed
-- Script update to fix spatial offset issues
+- Script updated to fix spatial offset issues
 
 
 ## [1.10]
