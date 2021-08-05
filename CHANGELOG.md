@@ -1,5 +1,16 @@
 # Changelog
-This is the changelog for the XSprayDrift component. It was automatically created on 2021-07-19.
+This is the changelog for the XSprayDrift component. It was automatically created on 2021-08-05.
+
+## [2.0.6] - 2021-08-05
+
+### Added
+
+### Changed
+- Renamed component and module `LICENSE.txt` to `LICENSE` 
+
+### Fixed
+- Spelling errors in component `README` and module `CHANGELOG` 
+
 
 ## [2.0.5] - 2021-07-19
 
