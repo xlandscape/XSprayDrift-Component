@@ -108,7 +108,7 @@ for further details on the component's interface.
 * `HabitatLulcTypes` - A comma-space separated list of numerical identifiers relating to habitat LULC types. A string
   with global scale. Values have no unit.
 * `FieldDistanceSD` - The standard deviation of a normal distribution that varies the field-habitat distance on a 
-  per-application base. A float with global scale. Value has a unit of m.
+  per-application basis. A float with global scale. Value has a unit of m.
 * `EPDistanceSD` - The standard deviation of a normal distribution that varies the field-habitat distance on a 
   per-exposure path base. A float with global scale. Value has a unit of m.
 * `ReportingThreshold` - The smallest exposure that is reported by the module. A float with global scale. Value has a 
