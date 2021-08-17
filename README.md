@@ -178,4 +178,4 @@ Sascha Bub - sascha.bub.ext@bayer.com
 ## Acknowledgements
 * [GDAL](https://pypi.org/project/GDAL)
 * [h5py](https://www.h5py.org)
-* [NumPy](htps://numpy.org)
+* [NumPy](https://numpy.org)
