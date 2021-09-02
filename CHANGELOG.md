@@ -1,5 +1,15 @@
 # Changelog
-This is the changelog for the XSprayDrift component. It was automatically created on 2021-08-17.
+This is the changelog for the XSprayDrift component. It was automatically created on 2021-09-02.
+
+## [2.0.8] - 2021-09-02
+
+### Added
+
+### Changed
+- Acknowledged default access mode for HDF files
+
+### Fixed
+
 
 ## [2.0.7] - 2021-08-17
 
