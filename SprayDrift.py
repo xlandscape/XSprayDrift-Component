@@ -16,6 +16,7 @@ class SprayDrift(base.Component):
     """
     # RELEASES
     VERSION = base.VersionCollection(
+        base.VersionInfo("2.0.8", "2021-09-02"),
         base.VersionInfo("2.0.7", "2021-08-17"),
         base.VersionInfo("2.0.6", "2021-08-05"),
         base.VersionInfo("2.0.5", "2021-07-19"),
@@ -97,6 +98,7 @@ class SprayDrift(base.Component):
     VERSION.changed("2.0.6", "Renamed component and module `LICENSE.txt` to `LICENSE` ")
     VERSION.fixed("2.0.6", "Spelling errors in component `README` and module `CHANGELOG` ")
     VERSION.fixed("2.0.7", "Broken link in module documentation")
+    VERSION.changed("2.0.8", "Acknowledged default access mode for HDF files")
 
     def __init__(self, name, observer, store):
         super(SprayDrift, self).__init__(name, observer, store)
@@ -411,7 +413,7 @@ class SprayDrift(base.Component):
             self.default_observer,
             {"R_LIBS": library_path, "R_LIBS_USER": library_path}
         )
-        f = h5py.File(hdf5, "r")
+        f = h5py.File(hdf5)
         if spatial_output_scale == "base_geometry":
             data_set = f["/data/day/base_geometry/spray_drift/exposure"]
             scales = "time/day, space/base_geometry"
