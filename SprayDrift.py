@@ -411,7 +411,7 @@ class SprayDrift(base.Component):
             self.default_observer,
             {"R_LIBS": library_path, "R_LIBS_USER": library_path}
         )
-        f = h5py.File(hdf5, "r")
+        f = h5py.File(hdf5)
         if spatial_output_scale == "base_geometry":
             data_set = f["/data/day/base_geometry/spray_drift/exposure"]
             scales = "time/day, space/base_geometry"
