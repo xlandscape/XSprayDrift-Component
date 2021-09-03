@@ -24,7 +24,7 @@ ppm_shapefile <-
   f$get_dataset(c(simulation, region), "ppm/shapefile")$get_values()
 habitat_lulc_types <-
   f$get_dataset(c(simulation, region),
-                "spray_drift/params/habitat_lulc_types")$get_values()
+                "spray_drift/params/habitat_types")$get_values()
 ep_width <-
   f$get_dataset(c(simulation, region),
                 "spray_drift/params/ep_width")$get_values()
@@ -63,7 +63,7 @@ random_seed <-
                 "spray_drift/params/random_seed")$get_values()
 filtering_lulc_types <-
   f$get_dataset(c(simulation, region),
-                "spray_drift/params/filtering_lulc_types")$get_values()
+                "spray_drift/params/filtering_types")$get_values()
 filtering_min_width <-
   f$get_dataset(c(simulation, region),
                 "spray_drift/params/filtering_min_width")$get_values()
@@ -83,7 +83,7 @@ ag_drift_quantile <-
 
 # Get values @ simulation/base_geometry
 lulc_type <-
-  f$get_dataset(c(simulation, base_geometry), "lulc/lulc_type")$get_values()
+  f$get_dataset(c(simulation, base_geometry), "landscape/feature_type")$get_values()
 
 # Get values @ day/region
 wind_direction <-
