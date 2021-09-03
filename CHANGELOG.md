@@ -1,5 +1,15 @@
 # Changelog
-This is the changelog for the XSprayDrift component. It was automatically created on 2021-09-02.
+This is the changelog for the XSprayDrift component. It was automatically created on 2021-09-03.
+
+## [2.0.9] - 2021-09-03
+
+### Added
+
+### Changed
+- Updated module to version 2.4
+
+### Fixed
+
 
 ## [2.0.8] - 2021-09-02
 
@@ -240,7 +250,7 @@ This is the changelog for the XSprayDrift component. It was automatically create
 - components.SprayDrift updated to module version 1.7
 
 ### Fixed
-- components.SprayDrift allows 16bit LULC type codes
+- components.SprayDrift allows 16bit land-use / land-cover type codes
 
 
 ## [1.2.16]

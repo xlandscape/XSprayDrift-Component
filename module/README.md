@@ -114,17 +114,17 @@ set up in the following:
   `data/simulation/region/spray-drift/params/filtering_fraction` of size 1 x 1 that specifies by which fraction 
   spray-drift is filtered if drift-filtering is enabled. The dataset has an 8-bit enum attribute (0=FALSE, 1=TRUE) `set`
   with a value of 1.
-* It contains a two-dimensional string dataset `data/simulation/region/spray-drift/params/filtering_lulc_types` of 
-  size 1 x 1 that contains a comma-and-space separated list of numerical type identifiers of drift-filtering LULC types.
-  This value applies if drift-filtering is enabled. The dataset has an 8-bit enum attribute (0=FALSE, 1=TRUE) `set`
-  with a value of 1.
+* It contains a two-dimensional string dataset `data/simulation/region/spray-drift/params/filtering_types` of 
+  size 1 x 1 that contains a comma-and-space separated list of numerical type identifiers of drift-filtering 
+  land-use / land-cover types. This value applies if drift-filtering is enabled. The dataset has an 8-bit enum attribute
+  (0=FALSE, 1=TRUE) `set` with a value of 1.
 * It contains a two-dimensional 32-bit floating point dataset 
   `data/simulation/region/spray-drift/params/filtering_min_width` of size 1 x 1 that defines the minimum width of 
   drift-filtering vegetation that has to be passed in meters before drift-filtering is applied . The dataset has an 
   8-bit enum attribute (0=FALSE, 1=TRUE) `set` with a value of 1.
-* It contains a two-dimensional string dataset `data/simulation/region/spray-drift/params/habitat_lulc_types` of 
-  size 1 x 1 that contains a comma-and-space separated list of numerical type identifiers of habitat LULC types.The 
-  dataset has an 8-bit enum attribute (0=FALSE, 1=TRUE) `set` with a value of 1.
+* It contains a two-dimensional string dataset `data/simulation/region/spray-drift/params/habitat_types` of 
+  size 1 x 1 that contains a comma-and-space separated list of numerical type identifiers of habitat land-use / 
+  land-cover types.The dataset has an 8-bit enum attribute (0=FALSE, 1=TRUE) `set` with a value of 1.
 * It contains a two-dimensional 32-bit floating point dataset 
   `data/simulation/region/spray-drift/params/max_angular_deviation` of size 1 x 1 that defines the maximum angle between
   source and sink receptors that still leads to spray-drift exposure. The dataset has an 8-bit enum attribute 
@@ -154,9 +154,10 @@ set up in the following:
 * It contains a two-dimensional 16-bit unsigned integer dataset `data/simulation/region/weather/wind_direction` of size 
   1 x 1 that defines the wind direction in degrees. A value of 65535 means to draw the wind direction from a 
   uniform PDF for each application. The dataset has an 8-bit enum attribute (0=FALSE, 1=TRUE) `set` with a value of 1.
-* It contains a two-dimensional 16-bit unsigned integer dataset `data/simulation/base_geometry/lulc/lulc_type` of size 
-  1 x _n_ where _n_ is the number of features in the `base.shp`. For each feature, it lists the numerical identifier of
-  the feature's LULC type. The dataset has an 8-bit enum attribute (0=FALSE, 1=TRUE) `set` with a value of 1.
+* It contains a two-dimensional 16-bit unsigned integer dataset `data/simulation/base_geometrylandscape/feature_type` 
+  of size 1 x _n_ where _n_ is the number of features in the `base.shp`. For each feature, it lists the numerical 
+  identifier of the feature's land-use / land-cover type. The dataset has an 8-bit enum attribute (0=FALSE, 1=TRUE) 
+  `set` with a value of 1.
 * It contains one of the following two datasets. This dataset should contain only zeroes. Make sure to enable 
   compression on this dataset and chunk it for fast access over space.
   * If the spatial output scale is "1sqm", a three-dimensional 32-bit floating point dataset 

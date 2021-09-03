@@ -16,6 +16,7 @@ class SprayDrift(base.Component):
     """
     # RELEASES
     VERSION = base.VersionCollection(
+        base.VersionInfo("2.0.9", "2021-09-03"),
         base.VersionInfo("2.0.8", "2021-09-02"),
         base.VersionInfo("2.0.7", "2021-08-17"),
         base.VersionInfo("2.0.6", "2021-08-05"),
@@ -64,7 +65,7 @@ class SprayDrift(base.Component):
     VERSION.changed("1.2.12", "Rautmann crop class can be parameterized in components.SprayDrift component")
     VERSION.fixed("1.2.15", "components.SprayDrift updated to module version 1.5")
     VERSION.changed("1.2.16", "components.SprayDrift updated to module version 1.6")
-    VERSION.fixed("1.2.20", "components.SprayDrift allows 16bit LULC type codes")
+    VERSION.fixed("1.2.20", "components.SprayDrift allows 16bit land-use / land-cover type codes")
     VERSION.changed("1.2.20", "components.SprayDrift updated to module version 1.7")
     VERSION.changed("1.2.23", "components.SprayDrift update to module version 1.8")
     VERSION.changed("1.2.25", "components.SprayDrift RandomSeed parameter added")
@@ -99,10 +100,11 @@ class SprayDrift(base.Component):
     VERSION.fixed("2.0.6", "Spelling errors in component `README` and module `CHANGELOG` ")
     VERSION.fixed("2.0.7", "Broken link in module documentation")
     VERSION.changed("2.0.8", "Acknowledged default access mode for HDF files")
+    VERSION.changed("2.0.9", "Updated module to version 2.4")
 
     def __init__(self, name, observer, store):
         super(SprayDrift, self).__init__(name, observer, store)
-        self._module = base.Module("XSprayDrift", "2.3")
+        self._module = base.Module("XSprayDrift", "2.4")
         self._inputs = base.InputContainer(self, [
             base.Input(
                 "ProcessingPath",
@@ -138,7 +140,7 @@ class SprayDrift(base.Component):
                 self.default_observer
             ),
             base.Input(
-                "HabitatLulcTypes",
+                "HabitatTypes",
                 (attrib.Class(str, 1), attrib.Unit(None, 1), attrib.Scales("global", 1)),
                 self.default_observer
             ),
@@ -159,7 +161,7 @@ class SprayDrift(base.Component):
                 self.default_observer
             ),
             base.Input(
-                "LulcTypes",
+                "LandUseLandCoverTypes",
                 (
                     attrib.Class("list[int]", 1),
                     attrib.Unit(None, 1),
@@ -219,7 +221,7 @@ class SprayDrift(base.Component):
             ),
             base.Input("RandomSeed", (attrib.Class(int, 1), attrib.Unit(None, 1)), self.default_observer),
             base.Input(
-                "FilteringLulcTypes",
+                "FilteringTypes",
                 (attrib.Class("list[int]", 1), attrib.Unit(None, 1), attrib.Scales("global", 1)),
                 self.default_observer
             ),
@@ -316,9 +318,9 @@ class SprayDrift(base.Component):
         f["/data/simulation/region/ppm/shapefile"] = np.full((1, 1), ppm_shapefile,
                                                              np.dtype("S" + str(len(ppm_shapefile))))
         f["/data/simulation/region/ppm/shapefile"].attrs["set"] = True
-        f["/data/simulation/region/spray_drift/params/habitat_lulc_types"] = np.full((1, 1), self.inputs[
-            "HabitatLulcTypes"].read().values, np.dtype("S" + str(len(self.inputs["HabitatLulcTypes"].read().values))))
-        f["/data/simulation/region/spray_drift/params/habitat_lulc_types"].attrs["set"] = True
+        f["/data/simulation/region/spray_drift/params/habitat_types"] = np.full((1, 1), self.inputs[
+            "HabitatTypes"].read().values, np.dtype("S" + str(len(self.inputs["HabitatTypes"].read().values))))
+        f["/data/simulation/region/spray_drift/params/habitat_types"].attrs["set"] = True
         f["/data/simulation/region/spray_drift/params/ep_width"] = np.full((1, 1), 3, np.float32)
         f["/data/simulation/region/spray_drift/params/ep_width"].attrs["set"] = True
         f["/data/simulation/region/spray_drift/params/max_angular_deviation"] = np.full((1, 1), 0, np.float32)
@@ -359,9 +361,9 @@ class SprayDrift(base.Component):
                                                                                        np.dtype("S" + str(
                                                                                            len(spatial_output_scale))))
         f["/data/simulation/region/spray_drift/params/spatial_output_scale"].attrs["set"] = True
-        f["/data/simulation/base_geometry/lulc/lulc_type"] = np.full((1, len(geometries)),
-                                                                     self.inputs["LulcTypes"].read().values, np.uint16)
-        f["/data/simulation/base_geometry/lulc/lulc_type"].attrs["set"] = True
+        f["/data/simulation/base_geometry/landscape/feature_type"] = np.full(
+            (1, len(geometries)), self.inputs["LandUseLandCoverTypes"].read().values, np.uint16)
+        f["/data/simulation/base_geometry/landscape/feature_type"].attrs["set"] = True
         f["/data/simulation/region/weather/wind_direction"] = np.full((1, 1),
                                                                       self.inputs["WindDirection"].read().values,
                                                                       np.uint16)
@@ -378,14 +380,16 @@ class SprayDrift(base.Component):
             random_seed = 0
         f["/data/simulation/region/spray_drift/params/random_seed"] = np.full((1, 1), random_seed, np.int)
         f["/data/simulation/region/spray_drift/params/random_seed"].attrs["set"] = True
-        if len(self.inputs["FilteringLulcTypes"].read().values) == 0:
+        if len(self.inputs["FilteringTypes"].read().values) == 0:
             # noinspection PyTypeChecker
-            f["/data/simulation/region/spray_drift/params/filtering_lulc_types"] = np.full((1, 1), " ", np.dtype("S1"))
+            f["/data/simulation/region/spray_drift/params/filtering_types"] = np.full((1, 1), " ", np.dtype("S1"))
         else:
-            f["/data/simulation/region/spray_drift/params/filtering_lulc_types"] = np.full((1, 1), self.inputs[
-                "FilteringLulcTypes"].read().values, np.dtype(
-                "S" + str(len(self.inputs["FilteringLulcTypes"].read().values))))
-        f["/data/simulation/region/spray_drift/params/filtering_lulc_types"].attrs["set"] = True
+            f["/data/simulation/region/spray_drift/params/filtering_types"] = np.full(
+                (1, 1),
+                self.inputs["FilteringTypes"].read().values,
+                np.dtype("S" + str(len(self.inputs["FilteringTypes"].read().values)))
+            )
+        f["/data/simulation/region/spray_drift/params/filtering_types"].attrs["set"] = True
         f["/data/simulation/region/spray_drift/params/filtering_min_width"] = np.full((1, 1), self.inputs[
             "FilteringMinWidth"].read().values, np.float32)
         f["/data/simulation/region/spray_drift/params/filtering_min_width"].attrs["set"] = True

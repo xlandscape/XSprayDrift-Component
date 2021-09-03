@@ -1,6 +1,11 @@
 # CHANGELOG
 This list contains all additions, changes and fixes for the XSprayDrift module.
 
+## [2.4] - 2021-09-03
+### Added
+### Changed
+- Renamed some datasets in HDF5 input file 
+### Fixed
 
 ## [2.3] - 2021-07-19
 ### Added
