@@ -104,7 +104,7 @@ class SprayDrift(base.Component):
 
     def __init__(self, name, observer, store):
         super(SprayDrift, self).__init__(name, observer, store)
-        self._module = base.Module("XSprayDrift", "2.4")
+        self._module = base.Module("XSprayDrift", "2.5", r"module\README.md")
         self._inputs = base.InputContainer(self, [
             base.Input(
                 "ProcessingPath",

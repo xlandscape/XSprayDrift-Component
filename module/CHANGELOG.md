@@ -1,6 +1,12 @@
 # CHANGELOG
 This list contains all additions, changes and fixes for the XSprayDrift module.
 
+## [2.5] - 2021-09-06
+### Added
+### Changed
+- Suppressed unnecessary display of outputs  
+### Fixed
+
 ## [2.4] - 2021-09-03
 ### Added
 ### Changed
