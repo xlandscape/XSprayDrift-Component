@@ -16,6 +16,7 @@ class SprayDrift(base.Component):
     """
     # RELEASES
     VERSION = base.VersionCollection(
+        base.VersionInfo("2.1.0", "2021-09-06"),
         base.VersionInfo("2.0.9", "2021-09-03"),
         base.VersionInfo("2.0.8", "2021-09-02"),
         base.VersionInfo("2.0.7", "2021-08-17"),
@@ -101,6 +102,7 @@ class SprayDrift(base.Component):
     VERSION.fixed("2.0.7", "Broken link in module documentation")
     VERSION.changed("2.0.8", "Acknowledged default access mode for HDF files")
     VERSION.changed("2.0.9", "Updated module to version 2.4")
+    VERSION.changed("2.1.0", "Updated module to version 2.5")
 
     def __init__(self, name, observer, store):
         super(SprayDrift, self).__init__(name, observer, store)
