@@ -1,6 +1,12 @@
 # CHANGELOG
 This list contains all additions, changes and fixes for the XSprayDrift module.
 
+## [2.6] - 2021-09-08
+### Added
+### Changed
+### Fixed
+- Error in determination of in-region exposure
+
 ## [2.5] - 2021-09-06
 ### Added
 ### Changed

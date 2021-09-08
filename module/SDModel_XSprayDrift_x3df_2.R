@@ -279,7 +279,7 @@ exposure <- pblapply(1:nrow(ppmsf), function(i) {
           idx <- exposure_appl[, scale_1sqm$t(cbind(x + 1, y + 1))]
           exposure_appl[, c("i", "j") := .(idx[, 1], idx[, 2])]
           exposure_appl <- exposure_appl[
-            `between`(i, c(1, exposure_ds$.f@dim[2])) & `between`(j, c(1, exposure_ds$.f@dim[3]))
+            `between`(i, 1, exposure_ds$.f@dim[2]) & `between`(j, 1, exposure_ds$.f@dim[3])
           ]
           ll <- exposure_appl[, cbind(min(i), min(j))]
           ru <- exposure_appl[, cbind(max(i), max(j))]
