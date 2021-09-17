@@ -127,7 +127,7 @@ class SprayDrift(base.Component):
             base.Input(
                 "Geometries",
                 (
-                    attrib.Class("list[bytes]", 1),
+                    attrib.Class(list[bytes], 1),
                     attrib.Unit(None, 1),
                     attrib.Scales("space/base_geometry", 1)
                 ),
@@ -140,7 +140,7 @@ class SprayDrift(base.Component):
             ),
             base.Input(
                 "Extent",
-                (attrib.Class("tuple[float]", 1), attrib.Unit("metre", 1), attrib.Scales("space/extent", 1)),
+                (attrib.Class(tuple[float], 1), attrib.Unit("metre", 1), attrib.Scales("space/extent", 1)),
                 self.default_observer
             ),
             base.Input(
@@ -167,7 +167,7 @@ class SprayDrift(base.Component):
             base.Input(
                 "LandUseLandCoverTypes",
                 (
-                    attrib.Class("list[int]", 1),
+                    attrib.Class(list[int], 1),
                     attrib.Unit(None, 1),
                     attrib.Scales("space/base_geometry", 1)
                 ),
@@ -215,7 +215,7 @@ class SprayDrift(base.Component):
             ),
             base.Input(
                 "AppliedAreas",
-                (attrib.Class("list[bytes]", 1), attrib.Unit(None, 1), attrib.Scales("other/application", 1)),
+                (attrib.Class(list[bytes], 1), attrib.Unit(None, 1), attrib.Scales("other/application", 1)),
                 self.default_observer
             ),
             base.Input(
@@ -226,7 +226,7 @@ class SprayDrift(base.Component):
             base.Input("RandomSeed", (attrib.Class(int, 1), attrib.Unit(None, 1)), self.default_observer),
             base.Input(
                 "FilteringTypes",
-                (attrib.Class("list[int]", 1), attrib.Unit(None, 1), attrib.Scales("global", 1)),
+                (attrib.Class(list[int], 1), attrib.Unit(None, 1), attrib.Scales("global", 1)),
                 self.default_observer
             ),
             base.Input(
