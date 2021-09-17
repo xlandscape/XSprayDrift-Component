@@ -1,5 +1,15 @@
 # Changelog
-This is the changelog for the XSprayDrift component. It was automatically created on 2021-09-08.
+This is the changelog for the XSprayDrift component. It was automatically created on 2021-09-17.
+
+## [2.1.2] - 2021-09-17
+
+### Added
+
+### Changed
+- Make use of generic types for class attributes
+
+### Fixed
+
 
 ## [2.1.1] - 2021-09-08
 
