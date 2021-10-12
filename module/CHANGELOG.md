@@ -1,6 +1,12 @@
 # CHANGELOG
 This list contains all additions, changes and fixes for the XSprayDrift module.
 
+## [2.7] - 2021-10-12
+### Added
+### Changed
+### Fixed
+- Spelling errors in module README
+
 ## [2.6] - 2021-09-08
 ### Added
 ### Changed
@@ -101,7 +107,7 @@ This list contains all additions, changes and fixes for the XSprayDrift module.
 ## [1.8]
 ### Added
 ### Changed
-- Updated module's R packages, including `xdrift` (now v0.1.1)
+- Updated the module's R packages, including `xdrift` (now v0.1.1)
 ### Fixed
 
 

@@ -127,11 +127,11 @@ set up in the following:
   land-cover types.The dataset has an 8-bit enum attribute (0=FALSE, 1=TRUE) `set` with a value of 1.
 * It contains a two-dimensional 32-bit floating point dataset 
   `data/simulation/region/spray-drift/params/max_angular_deviation` of size 1 x 1 that defines the maximum angle between
-  source and sink receptors that still leads to spray-drift exposure. The dataset has an 8-bit enum attribute 
+  the source and sink receptors that still leads to spray-drift exposure. The dataset has an 8-bit enum attribute 
   (0=FALSE, 1=TRUE) `set` with a value of 1.
 * It contains a two-dimensional 32-bit floating point dataset `data/simulation/region/spray-drift/params/min_dist` of
-  size 1 x 1 that defines the minimum distance between field and habitat for geometrical distances. The dataset has an 
-  8-bit enum attribute (0=FALSE, 1=TRUE) `set` with a value of 1.
+  size 1 x 1 that defines the minimum distance between the field and habitat for geometrical distances. The dataset has 
+  an 8-bit enum attribute (0=FALSE, 1=TRUE) `set` with a value of 1.
 * It contains a two-dimensional string dataset `data/simulation/region/spray-drift/params/model` of size 1 x 1 
   that specifies the model to use. Allowed values are "XSprayDrift", "90thRautmann" and "AgDRIFT". The dataset has an 
   8-bit enum attribute (0=FALSE, 1=TRUE) `set` with a value of 1.
