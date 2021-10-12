@@ -1,6 +1,4 @@
-"""
-Class definition of the SprayDrift component.
-"""
+"""Class definition of the SprayDrift component."""
 from osgeo import ogr, osr
 import datetime
 import h5py
@@ -11,9 +9,7 @@ import attrib
 
 
 class SprayDrift(base.Component):
-    """
-    A Landscape Model component that simulates spray-drift using XDrift.
-    """
+    """A Landscape Model component that simulates spray-drift using XDrift."""
     # RELEASES
     VERSION = base.VersionCollection(
         base.VersionInfo("2.1.3", "2021-10-11"),
@@ -97,22 +93,30 @@ class SprayDrift(base.Component):
     VERSION.added("2.0.1", "README, LICENSE, CHANGELOG, CONTRIBUTING")
     VERSION.changed("2.0.2", "Line separators in LICENSE")
     VERSION.changed("2.0.2", "Corrections in changelog and in README")
-    VERSION.changed("2.0.3", "Updated documentation and data type access")
-    VERSION.changed("2.0.4", "Updated module to version 2.2")
-    VERSION.changed("2.0.5", "Updated module to version 2.3")
+    VERSION.changed("2.0.3", "Updated the documentation and the datatype access")
+    VERSION.changed("2.0.4", "Updated the module to version 2.2")
+    VERSION.changed("2.0.5", "Updated the module to version 2.3")
     VERSION.changed("2.0.6", "Renamed component and module `LICENSE.txt` to `LICENSE` ")
     VERSION.fixed("2.0.6", "Spelling errors in component `README` and module `CHANGELOG` ")
     VERSION.fixed("2.0.7", "Broken link in module documentation")
     VERSION.changed("2.0.8", "Acknowledged default access mode for HDF files")
-    VERSION.changed("2.0.9", "Updated module to version 2.4")
-    VERSION.changed("2.1.0", "Updated module to version 2.5")
-    VERSION.changed("2.1.1", "Updated module to version 2.6")
+    VERSION.changed("2.0.9", "Updated the module to version 2.4")
+    VERSION.changed("2.1.0", "Updated the module to version 2.5")
+    VERSION.changed("2.1.1", "Updated the module to version 2.6")
     VERSION.changed("2.1.2", "Make use of generic types for class attributes")
     VERSION.changed("2.1.3", "Replaced legacy format strings by f-strings")
 
     def __init__(self, name, observer, store):
+        """
+        Initializes a SprayDrift component.
+
+        Args:
+            name: The name of the component.
+            observer: The default observer of the component.
+            store: The default store of the component.
+        """
         super(SprayDrift, self).__init__(name, observer, store)
-        self._module = base.Module("XSprayDrift", "2.6", r"module\README.md")
+        self._module = base.Module("XSprayDrift", "2.7", r"module\README.md")
         self._inputs = base.InputContainer(self, [
             base.Input(
                 "ProcessingPath",
@@ -266,12 +270,13 @@ class SprayDrift(base.Component):
         ])
         self._outputs = base.OutputContainer(self, [base.Output("Exposure", store, self)])
         self._application_rate_unit = None
-        return
 
     def run(self):
         """
         Runs the component.
-        :return: Nothing.
+
+        Returns:
+            Nothing.
         """
         processing_path = self.inputs["ProcessingPath"].read().values
         simulation_start = self.inputs["SimulationStart"].read().values
@@ -451,13 +456,16 @@ class SprayDrift(base.Component):
         for chunk in base.chunk_slices(data_set.shape, tuple(x * 5 for x in data_set.chunks)):
             self.outputs["Exposure"].set_values(data_set[chunk], slices=chunk, create=False, calculate_max=True)
         f.close()
-        return
 
     def prepare_ppm_shapefile(self, shapefile):
         """
         Prepares the application geometries.
-        :param shapefile: The file path of the geometries.
-        :return: Nothing.
+
+        Args:
+            shapefile: The file path of the geometries.
+
+        Returns:
+            Nothing.
         """
         crs = self.inputs["GeometryCrs"].read().values
         applied_fields = self.inputs["AppliedFields"].read().values
@@ -485,4 +493,3 @@ class SprayDrift(base.Component):
             feature.SetGeometry(ogr.CreateGeometryFromWkb(geometries[i]))
             ogr_layer.CreateFeature(feature)
         del ogr_layer_definition, ogr_layer, ogr_data_set, ogr_driver
-        return
