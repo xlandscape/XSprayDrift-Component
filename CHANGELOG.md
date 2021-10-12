@@ -1,5 +1,16 @@
 # Changelog
-This is the changelog for the XSprayDrift component. It was automatically created on 2021-10-11.
+This is the changelog for the XSprayDrift component. It was automatically created on 2021-10-12.
+
+## [2.2] - 2021-10-12
+
+### Added
+
+### Changed
+- Updated module to version 2.7
+- Switched to Google docstring style
+
+### Fixed
+
 
 ## [2.1.3] - 2021-10-11
 
@@ -26,7 +37,7 @@ This is the changelog for the XSprayDrift component. It was automatically create
 ### Added
 
 ### Changed
-- Updated module to version 2.6
+- Updated the module to version 2.6
 
 ### Fixed
 
@@ -36,7 +47,7 @@ This is the changelog for the XSprayDrift component. It was automatically create
 ### Added
 
 ### Changed
-- Updated module to version 2.5
+- Updated the module to version 2.5
 
 ### Fixed
 
@@ -46,7 +57,7 @@ This is the changelog for the XSprayDrift component. It was automatically create
 ### Added
 
 ### Changed
-- Updated module to version 2.4
+- Updated the module to version 2.4
 
 ### Fixed
 
@@ -87,7 +98,7 @@ This is the changelog for the XSprayDrift component. It was automatically create
 ### Added
 
 ### Changed
-- Updated module to version 2.3
+- Updated the module to version 2.3
 
 ### Fixed
 
@@ -97,7 +108,7 @@ This is the changelog for the XSprayDrift component. It was automatically create
 ### Added
 
 ### Changed
-- Updated module to version 2.2
+- Updated the module to version 2.2
 
 ### Fixed
 
@@ -107,7 +118,7 @@ This is the changelog for the XSprayDrift component. It was automatically create
 ### Added
 
 ### Changed
-- Updated documentation and data type access
+- Updated the documentation and the datatype access
 
 ### Fixed
 
