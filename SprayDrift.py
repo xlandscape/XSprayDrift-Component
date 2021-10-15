@@ -12,6 +12,7 @@ class SprayDrift(base.Component):
     """A Landscape Model component that simulates spray-drift using XDrift."""
     # RELEASES
     VERSION = base.VersionCollection(
+        base.VersionInfo("2.2.1", "2021-10-15"),
         base.VersionInfo("2.2.0", "2021-10-12"),
         base.VersionInfo("2.1.3", "2021-10-11"),
         base.VersionInfo("2.1.2", "2021-09-17"),
@@ -108,6 +109,7 @@ class SprayDrift(base.Component):
     VERSION.changed("2.1.3", "Replaced legacy format strings by f-strings")
     VERSION.changed("2.2.0", "Updated module to version 2.7")
     VERSION.changed("2.2.0", "Switched to Google docstring style")
+    VERSION.changed("2.2.1", "Set working directory for module call")
 
     def __init__(self, name, observer, store):
         """
@@ -437,7 +439,7 @@ class SprayDrift(base.Component):
         self.prepare_ppm_shapefile(ppm_shapefile)
         base.run_process(
             (r_exe, "--vanilla", r_script, x3df_path),
-            None,
+            processing_path,
             self.default_observer,
             {"R_LIBS": library_path, "R_LIBS_USER": library_path}
         )
