@@ -437,7 +437,7 @@ class SprayDrift(base.Component):
         self.prepare_ppm_shapefile(ppm_shapefile)
         base.run_process(
             (r_exe, "--vanilla", r_script, x3df_path),
-            None,
+            processing_path,
             self.default_observer,
             {"R_LIBS": library_path, "R_LIBS_USER": library_path}
         )
