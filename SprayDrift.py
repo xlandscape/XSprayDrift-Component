@@ -447,16 +447,19 @@ class SprayDrift(base.Component):
         if spatial_output_scale == "base_geometry":
             data_set = f["/data/day/base_geometry/spray_drift/exposure"]
             scales = "time/day, space/base_geometry"
+            element_names = (None, self.inputs["Geometries"].describe()["element_names"][0])
         else:
             data_set = f["/data/day/1sqm/spray_drift/exposure"]
             scales = "time/day, space_x/1sqm, space_y/1sqm"
+            element_names = None
         self.outputs["Exposure"].set_values(
             np.ndarray,
             shape=data_set.shape,
             data_type=data_set.dtype,
             chunks=data_set.chunks,
             scales=scales,
-            unit=self._application_rate_unit
+            unit=self._application_rate_unit,
+            element_names=element_names
         )
         for chunk in base.chunk_slices(data_set.shape, tuple(x * 5 for x in data_set.chunks)):
             self.outputs["Exposure"].set_values(data_set[chunk], slices=chunk, create=False, calculate_max=True)
