@@ -12,6 +12,7 @@ class SprayDrift(base.Component):
     """A Landscape Model component that simulates spray-drift using XDrift."""
     # RELEASES
     VERSION = base.VersionCollection(
+        base.VersionInfo("2.2.2", "2021-11-18"),
         base.VersionInfo("2.2.1", "2021-10-15"),
         base.VersionInfo("2.2.0", "2021-10-12"),
         base.VersionInfo("2.1.3", "2021-10-11"),
@@ -110,6 +111,7 @@ class SprayDrift(base.Component):
     VERSION.changed("2.2.0", "Updated module to version 2.7")
     VERSION.changed("2.2.0", "Switched to Google docstring style")
     VERSION.changed("2.2.1", "Set working directory for module call")
+    VERSION.changed("2.2.2", "Reports element names of Exposure output if working at `base_geometry` scale")
 
     def __init__(self, name, observer, store):
         """
@@ -447,16 +449,19 @@ class SprayDrift(base.Component):
         if spatial_output_scale == "base_geometry":
             data_set = f["/data/day/base_geometry/spray_drift/exposure"]
             scales = "time/day, space/base_geometry"
+            element_names = (None, self.inputs["Geometries"].describe()["element_names"][0])
         else:
             data_set = f["/data/day/1sqm/spray_drift/exposure"]
             scales = "time/day, space_x/1sqm, space_y/1sqm"
+            element_names = None
         self.outputs["Exposure"].set_values(
             np.ndarray,
             shape=data_set.shape,
             data_type=data_set.dtype,
             chunks=data_set.chunks,
             scales=scales,
-            unit=self._application_rate_unit
+            unit=self._application_rate_unit,
+            element_names=element_names
         )
         for chunk in base.chunk_slices(data_set.shape, tuple(x * 5 for x in data_set.chunks)):
             self.outputs["Exposure"].set_values(data_set[chunk], slices=chunk, create=False, calculate_max=True)

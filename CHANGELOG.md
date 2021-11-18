@@ -1,5 +1,15 @@
 # Changelog
-This is the changelog for the XSprayDrift component. It was automatically created on 2021-10-15.
+This is the changelog for the XSprayDrift component. It was automatically created on 2021-11-18.
+
+## [2.2.2] - 2021-11-18
+
+### Added
+
+### Changed
+- Reports element names of Exposure output if working at `base_geometry` scale
+
+### Fixed
+
 
 ## [2.2.1] - 2021-10-15
 
