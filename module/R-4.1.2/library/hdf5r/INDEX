@@ -1,0 +1,75 @@
+$.types_env             Retrieving a copy of a type
+H5A-class               Class for representing HDF5 attributes
+H5D-class               Class for representing HDF5 datasets
+H5File-class            Class for interacting with HDF5 files.
+H5Group-class           Class for representing HDF5 groups
+H5Group_access          Retrieve object from a group of file
+H5P-class               Class for HDF5 property lists.
+H5P_ATTRIBUTE_CREATE-class
+                        Class for HDF5 property list for attribute
+                        creation
+H5P_CLASS-class         Class for HDF5 property list classes (not HDF5
+                        property lists)
+H5P_DATASET_ACCESS-class
+                        Class for HDF5 property list for dataset access
+H5P_DATASET_CREATE-class
+                        Class for HDF5 property list for dataset
+                        creation
+H5P_DATASET_XFER-class
+                        Class for HDF5 property list for dataset
+                        transfer
+H5P_FILE_ACCESS-class   Class for HDF5 property list for file creation
+H5P_FILE_CREATE-class   Class for HDF5 property list for file creation
+H5P_LINK_ACCESS-class   Class for HDF5 property list for link access
+H5P_LINK_CREATE-class   Class for HDF5 property list for link creation
+H5P_OBJECT_COPY-class   Class for HDF5 property list for object copying
+H5P_OBJECT_CREATE-class
+                        Class for HDF5 property list for object
+                        creation
+H5R-class               Class for HDF5 Reference datatypes.
+H5R_DATASET_REGION-class
+                        Class for HDF5 dataset-region references.
+H5R_OBJECT-class        Class for HDF5 Object-references.
+H5R_functions           Various functions for 'H5R' objects
+H5RefClass-class        Base class that tracks the ids and allows for
+                        closing an id
+H5S-class               Class for representing HDF5 spaces
+H5S_H5D_subset_assign   Selecting and assigning subsets of HDF5-Spaces
+                        and HDF5-Datasets
+H5T-class               Class for HDF5 datatypes.
+H5T_ARRAY-class         Class for HDF5 array datatypes.
+H5T_COMPLEX-class       Class for HDF5 complex datatypes
+H5T_COMPOUND-class      Class for HDF5 compound datatypes.
+H5T_ENUM-class          Class for HDF5 enumeration datatypes.
+H5T_FLOAT-class         Class for HDF5 floating point datatypes.
+H5T_INTEGER-class       Class for HDF5 integer-datatypes.
+H5T_LOGICAL-class       Class for HDF5 logical datatypes. This is an
+                        enum with the 3 values FALSE, TRUE and NA
+                        mapped on values 0, 1 and 2. Is transparently
+                        mapped onto a logical variable
+H5T_STRING-class        Class for HDF5 string datatypes.
+H5T_VLEN-class          Class for HDF5 variable-length datatypes.
+as_hex                  Convert a double or integer to hex
+create_empty            Create an empty R-object according to a given
+                        HDF5 datatype
+factor_ext              Create an extended factor
+factor_ext_functions    Various functions for 'factor_ext' objects
+flatten_df              Flatten a nested data.frame
+guess_chunks            Guess the dimension of a chunk
+guess_nelem             Guess the HDF5 datatype of an R object
+guess_space             Guess the dataspace of an object
+h5-wrapper              Wrapper functions to provide an 'h5' compatible
+                        interface.
+h5attributes            Interface for HDF5 attributes
+h5const                 All constants used in HDF5
+h5garbage_collect       Trigger the HDF5 garbage collection
+h5types                 These are all types that are used in HDF5
+h5version               Return the version of the HDF5-API
+hdf5r-package           hdf5r: A package to provide an interface to
+                        hdf5 from R
+is_hdf5                 Check if a file is an HDF5 file
+list-groups-datasets    List Groups and Datasets in object
+names.H5Group           Get the names of the items in the group or at
+                        the '/' root of the file
+print.data.frame_ext    Print a data frame with extended factor objects
+text_to_dtype           Convert a text description to a datatype

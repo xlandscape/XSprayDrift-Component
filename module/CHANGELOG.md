@@ -1,6 +1,15 @@
 # CHANGELOG
 This list contains all additions, changes and fixes for the XSprayDrift module.
 
+## [3.0] - 2021-11-24
+### Added
+### Changed
+- Updated runtime environment to version 4.1.2
+- Replaced usage of `h5` package by `hdf5r` 
+- Usage of `sf` package instead of `rgdal` and `rgeos` 
+- Replaced usage of `raster` package by `terra` 
+### Fixed
+- Memory leak caused by `rgeos` functions; module now has a constant memory usage of typically <1 GB
 ## [2.7] - 2021-10-12
 ### Added
 ### Changed
