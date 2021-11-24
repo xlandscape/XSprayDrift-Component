@@ -338,26 +338,28 @@ if (spatial_output_scale == "base_geometry") {
   result <- pbsapply(1:length(lulc_type), function(i) {
     if (`%in%`(lulc_type[i], habitat_types)) {
       habitat <- geometries[i,]
-      r <- rast(
-          xmin = habitat@bbox[1,1],
-          xmax = habitat@bbox[1,2],
-          ymin = habitat@bbox[2,1],
-          ymax = habitat@bbox[2,2],
-          crs = geometries@proj4string@projargs,
-          resolution = 1
-      )
-      r <- rasterize(vect(habitat), r, 0)
-      dt <- data.table(id = 1:ncell(r), lulc = c(r[]))[!is.nan(lulc)]
-      dt[, c("x", "y") := list(xFromCell(r, id), yFromCell(r, id))]
-      idx <- dt[, scale_1sqm$t(cbind(x + 1, y + 1))]
-      dt <- data.table(x = idx[, 1], y = idx[, 2])
-      setkeyv(dt, c("x", "y"))
-      habitat_exposure <- exposure[dt]
-      if (habitat_exposure[exposure > 0, .N] > 0) {
-        habitat_exposure <- habitat_exposure[!is.na(t), sum(exposure) / dt[, .N], t]
-        sapply(1:nrow(habitat_exposure), function(j) {
-          exposure_ds$.f[i,habitat_exposure[j,t]] <- habitat_exposure[j, V1]
-        })
+      if (habitat@bbox[1,2] - habitat@bbox[1,1] > 1 & habitat@bbox[2,2] - habitat@bbox[2,1] > 1) {
+        r <- rast(
+            xmin = habitat@bbox[1,1],
+            xmax = habitat@bbox[1,2],
+            ymin = habitat@bbox[2,1],
+            ymax = habitat@bbox[2,2],
+            crs = geometries@proj4string@projargs,
+            resolution = 1
+        )
+        r <- rasterize(vect(habitat), r, 0)
+        dt <- data.table(id = 1:ncell(r), lulc = c(r[]))[!is.nan(lulc)]
+        dt[, c("x", "y") := list(xFromCell(r, id), yFromCell(r, id))]
+        idx <- dt[, scale_1sqm$t(cbind(x + 1, y + 1))]
+        dt <- data.table(x = idx[, 1], y = idx[, 2])
+        setkeyv(dt, c("x", "y"))
+        habitat_exposure <- exposure[dt]
+        if (habitat_exposure[exposure > 0, .N] > 0) {
+          habitat_exposure <- habitat_exposure[!is.na(t), sum(exposure) / dt[, .N], t]
+          sapply(1:nrow(habitat_exposure), function(j) {
+            exposure_ds$.f[i,habitat_exposure[j,t]] <- habitat_exposure[j, V1]
+          })
+        }
       }
     }
     TRUE
