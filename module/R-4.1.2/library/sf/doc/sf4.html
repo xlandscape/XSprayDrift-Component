@@ -1,0 +1,554 @@
+<!DOCTYPE html>
+
+<html>
+
+<head>
+
+<meta charset="utf-8" />
+<meta name="generator" content="pandoc" />
+<meta http-equiv="X-UA-Compatible" content="IE=EDGE" />
+
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+
+<meta name="author" content="Edzer Pebesma" />
+
+
+<title>4. Manipulating Simple Features</title>
+
+
+<style type="text/css">
+  code{white-space: pre-wrap;}
+  span.smallcaps{font-variant: small-caps;}
+  span.underline{text-decoration: underline;}
+  div.column{display: inline-block; vertical-align: top; width: 50%;}
+  div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+  ul.task-list{list-style: none;}
+    </style>
+
+
+<style type="text/css">
+  code {
+    white-space: pre;
+  }
+  .sourceCode {
+    overflow: visible;
+  }
+</style>
+<style type="text/css" data-origin="pandoc">
+a.sourceLine { display: inline-block; line-height: 1.25; }
+a.sourceLine { pointer-events: none; color: inherit; text-decoration: inherit; }
+a.sourceLine:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode { white-space: pre; position: relative; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+code.sourceCode { white-space: pre-wrap; }
+a.sourceLine { text-indent: -1em; padding-left: 1em; }
+}
+pre.numberSource a.sourceLine
+  { position: relative; left: -4em; }
+pre.numberSource a.sourceLine::before
+  { content: attr(title);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; pointer-events: all; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+    color: #aaaaaa;
+  }
+pre.numberSource { margin-left: 3em; border-left: 1px solid #aaaaaa;  padding-left: 4px; }
+div.sourceCode
+  {  }
+@media screen {
+a.sourceLine::before { text-decoration: underline; }
+}
+code span.al { color: #ff0000; font-weight: bold; } /* Alert */
+code span.an { color: #60a0b0; font-weight: bold; font-style: italic; } /* Annotation */
+code span.at { color: #7d9029; } /* Attribute */
+code span.bn { color: #40a070; } /* BaseN */
+code span.bu { } /* BuiltIn */
+code span.cf { color: #007020; font-weight: bold; } /* ControlFlow */
+code span.ch { color: #4070a0; } /* Char */
+code span.cn { color: #880000; } /* Constant */
+code span.co { color: #60a0b0; font-style: italic; } /* Comment */
+code span.cv { color: #60a0b0; font-weight: bold; font-style: italic; } /* CommentVar */
+code span.do { color: #ba2121; font-style: italic; } /* Documentation */
+code span.dt { color: #902000; } /* DataType */
+code span.dv { color: #40a070; } /* DecVal */
+code span.er { color: #ff0000; font-weight: bold; } /* Error */
+code span.ex { } /* Extension */
+code span.fl { color: #40a070; } /* Float */
+code span.fu { color: #06287e; } /* Function */
+code span.im { } /* Import */
+code span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Information */
+code span.kw { color: #007020; font-weight: bold; } /* Keyword */
+code span.op { color: #666666; } /* Operator */
+code span.ot { color: #007020; } /* Other */
+code span.pp { color: #bc7a00; } /* Preprocessor */
+code span.sc { color: #4070a0; } /* SpecialChar */
+code span.ss { color: #bb6688; } /* SpecialString */
+code span.st { color: #4070a0; } /* String */
+code span.va { color: #19177c; } /* Variable */
+code span.vs { color: #4070a0; } /* VerbatimString */
+code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warning */
+
+</style>
+<script>
+// apply pandoc div.sourceCode style to pre.sourceCode instead
+(function() {
+  var sheets = document.styleSheets;
+  for (var i = 0; i < sheets.length; i++) {
+    if (sheets[i].ownerNode.dataset["origin"] !== "pandoc") continue;
+    try { var rules = sheets[i].cssRules; } catch (e) { continue; }
+    for (var j = 0; j < rules.length; j++) {
+      var rule = rules[j];
+      // check if there is a div.sourceCode rule
+      if (rule.type !== rule.STYLE_RULE || rule.selectorText !== "div.sourceCode") continue;
+      var style = rule.style.cssText;
+      // check if color or background-color is set
+      if (rule.style.color === '' && rule.style.backgroundColor === '') continue;
+      // replace div.sourceCode by a pre.sourceCode rule
+      sheets[i].deleteRule(j);
+      sheets[i].insertRule('pre.sourceCode{' + style + '}', j);
+    }
+  }
+})();
+</script>
+
+
+
+
+<style type="text/css">body {
+background-color: #fff;
+margin: 1em auto;
+max-width: 700px;
+overflow: visible;
+padding-left: 2em;
+padding-right: 2em;
+font-family: "Open Sans", "Helvetica Neue", Helvetica, Arial, sans-serif;
+font-size: 14px;
+line-height: 1.35;
+}
+#TOC {
+clear: both;
+margin: 0 0 10px 10px;
+padding: 4px;
+width: 400px;
+border: 1px solid #CCCCCC;
+border-radius: 5px;
+background-color: #f6f6f6;
+font-size: 13px;
+line-height: 1.3;
+}
+#TOC .toctitle {
+font-weight: bold;
+font-size: 15px;
+margin-left: 5px;
+}
+#TOC ul {
+padding-left: 40px;
+margin-left: -1.5em;
+margin-top: 5px;
+margin-bottom: 5px;
+}
+#TOC ul ul {
+margin-left: -2em;
+}
+#TOC li {
+line-height: 16px;
+}
+table {
+margin: 1em auto;
+border-width: 1px;
+border-color: #DDDDDD;
+border-style: outset;
+border-collapse: collapse;
+}
+table th {
+border-width: 2px;
+padding: 5px;
+border-style: inset;
+}
+table td {
+border-width: 1px;
+border-style: inset;
+line-height: 18px;
+padding: 5px 5px;
+}
+table, table th, table td {
+border-left-style: none;
+border-right-style: none;
+}
+table thead, table tr.even {
+background-color: #f7f7f7;
+}
+p {
+margin: 0.5em 0;
+}
+blockquote {
+background-color: #f6f6f6;
+padding: 0.25em 0.75em;
+}
+hr {
+border-style: solid;
+border: none;
+border-top: 1px solid #777;
+margin: 28px 0;
+}
+dl {
+margin-left: 0;
+}
+dl dd {
+margin-bottom: 13px;
+margin-left: 13px;
+}
+dl dt {
+font-weight: bold;
+}
+ul {
+margin-top: 0;
+}
+ul li {
+list-style: circle outside;
+}
+ul ul {
+margin-bottom: 0;
+}
+pre, code {
+background-color: #f7f7f7;
+border-radius: 3px;
+color: #333;
+white-space: pre-wrap; 
+}
+pre {
+border-radius: 3px;
+margin: 5px 0px 10px 0px;
+padding: 10px;
+}
+pre:not([class]) {
+background-color: #f7f7f7;
+}
+code {
+font-family: Consolas, Monaco, 'Courier New', monospace;
+font-size: 85%;
+}
+p > code, li > code {
+padding: 2px 0px;
+}
+div.figure {
+text-align: center;
+}
+img {
+background-color: #FFFFFF;
+padding: 2px;
+border: 1px solid #DDDDDD;
+border-radius: 3px;
+border: 1px solid #CCCCCC;
+margin: 0 5px;
+}
+h1 {
+margin-top: 0;
+font-size: 35px;
+line-height: 40px;
+}
+h2 {
+border-bottom: 4px solid #f7f7f7;
+padding-top: 10px;
+padding-bottom: 2px;
+font-size: 145%;
+}
+h3 {
+border-bottom: 2px solid #f7f7f7;
+padding-top: 10px;
+font-size: 120%;
+}
+h4 {
+border-bottom: 1px solid #f7f7f7;
+margin-left: 8px;
+font-size: 105%;
+}
+h5, h6 {
+border-bottom: 1px solid #ccc;
+font-size: 105%;
+}
+a {
+color: #0033dd;
+text-decoration: none;
+}
+a:hover {
+color: #6666ff; }
+a:visited {
+color: #800080; }
+a:visited:hover {
+color: #BB00BB; }
+a[href^="http:"] {
+text-decoration: underline; }
+a[href^="https:"] {
+text-decoration: underline; }
+
+code > span.kw { color: #555; font-weight: bold; } 
+code > span.dt { color: #902000; } 
+code > span.dv { color: #40a070; } 
+code > span.bn { color: #d14; } 
+code > span.fl { color: #d14; } 
+code > span.ch { color: #d14; } 
+code > span.st { color: #d14; } 
+code > span.co { color: #888888; font-style: italic; } 
+code > span.ot { color: #007020; } 
+code > span.al { color: #ff0000; font-weight: bold; } 
+code > span.fu { color: #900; font-weight: bold; } 
+code > span.er { color: #a61717; background-color: #e3d2d2; } 
+</style>
+
+
+
+
+</head>
+
+<body>
+
+
+
+
+<h1 class="title toc-ignore">4. Manipulating Simple Features</h1>
+<h4 class="author">Edzer Pebesma</h4>
+
+
+
+<p><strong>For a better version of the sf vignettes see</strong> <a href="https://r-spatial.github.io/sf/articles/" class="uri">https://r-spatial.github.io/sf/articles/</a></p>
+<p>This vignette describes how simple features, i.e. records that come with a geometry, can be manipulated, for the case where these manipulations involve geometries. Manipulations include:</p>
+<ul>
+<li>aggregating feature sets</li>
+<li>summarising feature sets</li>
+<li>joining two feature sets based on feature geometry</li>
+</ul>
+<p>Features are represented by records in an <code>sf</code> object, and have feature attributes (all non-geometry fields) and feature geometry. Since <code>sf</code> objects are a subclass of <code>data.frame</code> or <code>tbl_df</code>, operations on feature attributes work identically to how they work on <code>data.frame</code>s, e.g.</p>
+<div class="sourceCode" id="cb1"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb1-1" title="1"><span class="kw">library</span>(sf)</a>
+<a class="sourceLine" id="cb1-2" title="2">nc &lt;-<span class="st"> </span><span class="kw">st_read</span>(<span class="kw">system.file</span>(<span class="st">&quot;shape/nc.shp&quot;</span>, <span class="dt">package=</span><span class="st">&quot;sf&quot;</span>))</a>
+<a class="sourceLine" id="cb1-3" title="3"><span class="co">## Reading layer `nc&#39; from data source </span></a>
+<a class="sourceLine" id="cb1-4" title="4"><span class="co">##   `/tmp/Rtmp9458m6/Rinst3840f6ed6eb15/sf/shape/nc.shp&#39; using driver `ESRI Shapefile&#39;</span></a>
+<a class="sourceLine" id="cb1-5" title="5"><span class="co">## Simple feature collection with 100 features and 14 fields</span></a>
+<a class="sourceLine" id="cb1-6" title="6"><span class="co">## Geometry type: MULTIPOLYGON</span></a>
+<a class="sourceLine" id="cb1-7" title="7"><span class="co">## Dimension:     XY</span></a>
+<a class="sourceLine" id="cb1-8" title="8"><span class="co">## Bounding box:  xmin: -84.32385 ymin: 33.88199 xmax: -75.45698 ymax: 36.58965</span></a>
+<a class="sourceLine" id="cb1-9" title="9"><span class="co">## Geodetic CRS:  NAD27</span></a>
+<a class="sourceLine" id="cb1-10" title="10">nc &lt;-<span class="st"> </span><span class="kw">st_transform</span>(nc, <span class="dv">2264</span>)</a>
+<a class="sourceLine" id="cb1-11" title="11">nc[<span class="dv">1</span>,]</a>
+<a class="sourceLine" id="cb1-12" title="12"><span class="co">## Simple feature collection with 1 feature and 14 fields</span></a>
+<a class="sourceLine" id="cb1-13" title="13"><span class="co">## Geometry type: MULTIPOLYGON</span></a>
+<a class="sourceLine" id="cb1-14" title="14"><span class="co">## Dimension:     XY</span></a>
+<a class="sourceLine" id="cb1-15" title="15"><span class="co">## Bounding box:  xmin: 1193283 ymin: 913341.9 xmax: 1340555 ymax: 1044158</span></a>
+<a class="sourceLine" id="cb1-16" title="16"><span class="co">## Projected CRS: NAD83 / North Carolina (ftUS)</span></a>
+<a class="sourceLine" id="cb1-17" title="17"><span class="co">##    AREA PERIMETER CNTY_ CNTY_ID NAME  FIPS FIPSNO CRESS_ID BIR74 SID74 NWBIR74</span></a>
+<a class="sourceLine" id="cb1-18" title="18"><span class="co">## 1 0.114     1.442  1825    1825 Ashe 37009  37009        5  1091     1      10</span></a>
+<a class="sourceLine" id="cb1-19" title="19"><span class="co">##   BIR79 SID79 NWBIR79                       geometry</span></a>
+<a class="sourceLine" id="cb1-20" title="20"><span class="co">## 1  1364     0      19 MULTIPOLYGON (((1270814 913...</span></a></code></pre></div>
+<p>prints the first record.</p>
+<p>Many of the tidyverse/dplyr verbs have methods for <code>sf</code> objects. This means that if both <code>sf</code> and <code>dplyr</code> are loaded, manipulations such as selecting a single attribute will return an <code>sf</code> object:</p>
+<div class="sourceCode" id="cb2"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb2-1" title="1"><span class="kw">library</span>(dplyr)</a>
+<a class="sourceLine" id="cb2-2" title="2">nc <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">select</span>(NWBIR74) <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">head</span>(<span class="dv">2</span>)</a>
+<a class="sourceLine" id="cb2-3" title="3"><span class="co">## Simple feature collection with 2 features and 1 field</span></a>
+<a class="sourceLine" id="cb2-4" title="4"><span class="co">## Geometry type: MULTIPOLYGON</span></a>
+<a class="sourceLine" id="cb2-5" title="5"><span class="co">## Dimension:     XY</span></a>
+<a class="sourceLine" id="cb2-6" title="6"><span class="co">## Bounding box:  xmin: 1193283 ymin: 913341.9 xmax: 1441003 ymax: 1044158</span></a>
+<a class="sourceLine" id="cb2-7" title="7"><span class="co">## Projected CRS: NAD83 / North Carolina (ftUS)</span></a>
+<a class="sourceLine" id="cb2-8" title="8"><span class="co">##   NWBIR74                       geometry</span></a>
+<a class="sourceLine" id="cb2-9" title="9"><span class="co">## 1      10 MULTIPOLYGON (((1270814 913...</span></a>
+<a class="sourceLine" id="cb2-10" title="10"><span class="co">## 2      10 MULTIPOLYGON (((1340555 959...</span></a></code></pre></div>
+<p>which implies that the geometry is sticky, and gets added automatically. If we want to drop geometry, we can coerce to <code>data.frame</code> first, this drops geometry list-columns:</p>
+<div class="sourceCode" id="cb3"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb3-1" title="1">nc <span class="op">%&gt;%</span><span class="st"> </span>as.data.frame <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">select</span>(NWBIR74) <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">head</span>(<span class="dv">2</span>)</a>
+<a class="sourceLine" id="cb3-2" title="2"><span class="co">##   NWBIR74</span></a>
+<a class="sourceLine" id="cb3-3" title="3"><span class="co">## 1      10</span></a>
+<a class="sourceLine" id="cb3-4" title="4"><span class="co">## 2      10</span></a></code></pre></div>
+<div id="subsetting-feature-sets" class="section level2">
+<h2>Subsetting feature sets</h2>
+<p>We can subset feature sets by using the square bracket notation</p>
+<div class="sourceCode" id="cb4"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb4-1" title="1">nc[<span class="dv">1</span>, <span class="st">&quot;NWBIR74&quot;</span>]</a>
+<a class="sourceLine" id="cb4-2" title="2"><span class="co">## Simple feature collection with 1 feature and 1 field</span></a>
+<a class="sourceLine" id="cb4-3" title="3"><span class="co">## Geometry type: MULTIPOLYGON</span></a>
+<a class="sourceLine" id="cb4-4" title="4"><span class="co">## Dimension:     XY</span></a>
+<a class="sourceLine" id="cb4-5" title="5"><span class="co">## Bounding box:  xmin: 1193283 ymin: 913341.9 xmax: 1340555 ymax: 1044158</span></a>
+<a class="sourceLine" id="cb4-6" title="6"><span class="co">## Projected CRS: NAD83 / North Carolina (ftUS)</span></a>
+<a class="sourceLine" id="cb4-7" title="7"><span class="co">##   NWBIR74                       geometry</span></a>
+<a class="sourceLine" id="cb4-8" title="8"><span class="co">## 1      10 MULTIPOLYGON (((1270814 913...</span></a></code></pre></div>
+<p>and use the <code>drop</code> argument to drop geometries:</p>
+<div class="sourceCode" id="cb5"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb5-1" title="1">nc[<span class="dv">1</span>, <span class="st">&quot;NWBIR74&quot;</span>, drop =<span class="st"> </span><span class="ot">TRUE</span>]</a>
+<a class="sourceLine" id="cb5-2" title="2"><span class="co">## [1] 10</span></a>
+<a class="sourceLine" id="cb5-3" title="3"><span class="co">## attr(,&quot;class&quot;)</span></a>
+<a class="sourceLine" id="cb5-4" title="4"><span class="co">## [1] &quot;numeric&quot;</span></a></code></pre></div>
+<p>but we can also use a spatial object as the row selector, to select features that intersect with another spatial feature:</p>
+<div class="sourceCode" id="cb6"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb6-1" title="1">Ashe =<span class="st"> </span>nc[nc<span class="op">$</span>NAME <span class="op">==</span><span class="st"> &quot;Ashe&quot;</span>,]</a>
+<a class="sourceLine" id="cb6-2" title="2"><span class="kw">class</span>(Ashe)</a>
+<a class="sourceLine" id="cb6-3" title="3"><span class="co">## [1] &quot;sf&quot;         &quot;data.frame&quot;</span></a>
+<a class="sourceLine" id="cb6-4" title="4">nc[Ashe,]</a>
+<a class="sourceLine" id="cb6-5" title="5"><span class="co">## Simple feature collection with 4 features and 14 fields</span></a>
+<a class="sourceLine" id="cb6-6" title="6"><span class="co">## Geometry type: MULTIPOLYGON</span></a>
+<a class="sourceLine" id="cb6-7" title="7"><span class="co">## Dimension:     XY</span></a>
+<a class="sourceLine" id="cb6-8" title="8"><span class="co">## Bounding box:  xmin: 1142157 ymin: 823092 xmax: 1448920 ymax: 1044158</span></a>
+<a class="sourceLine" id="cb6-9" title="9"><span class="co">## Projected CRS: NAD83 / North Carolina (ftUS)</span></a>
+<a class="sourceLine" id="cb6-10" title="10"><span class="co">##     AREA PERIMETER CNTY_ CNTY_ID      NAME  FIPS FIPSNO CRESS_ID BIR74 SID74</span></a>
+<a class="sourceLine" id="cb6-11" title="11"><span class="co">## 1  0.114     1.442  1825    1825      Ashe 37009  37009        5  1091     1</span></a>
+<a class="sourceLine" id="cb6-12" title="12"><span class="co">## 2  0.061     1.231  1827    1827 Alleghany 37005  37005        3   487     0</span></a>
+<a class="sourceLine" id="cb6-13" title="13"><span class="co">## 18 0.199     1.984  1874    1874    Wilkes 37193  37193       97  3146     4</span></a>
+<a class="sourceLine" id="cb6-14" title="14"><span class="co">## 19 0.081     1.288  1880    1880   Watauga 37189  37189       95  1323     1</span></a>
+<a class="sourceLine" id="cb6-15" title="15"><span class="co">##    NWBIR74 BIR79 SID79 NWBIR79                       geometry</span></a>
+<a class="sourceLine" id="cb6-16" title="16"><span class="co">## 1       10  1364     0      19 MULTIPOLYGON (((1270814 913...</span></a>
+<a class="sourceLine" id="cb6-17" title="17"><span class="co">## 2       10   542     3      12 MULTIPOLYGON (((1340555 959...</span></a>
+<a class="sourceLine" id="cb6-18" title="18"><span class="co">## 18     200  3725     7     222 MULTIPOLYGON (((1402677 837...</span></a>
+<a class="sourceLine" id="cb6-19" title="19"><span class="co">## 19      17  1775     1      33 MULTIPOLYGON (((1171158 868...</span></a></code></pre></div>
+<p>We see that in the result set <code>Ashe</code> is included, as the default value for argument <code>op</code> in <code>[.sf</code> is <code>st_intersects</code>, and <code>Ashe</code> intersects with itself. We could exclude self-intersection by using predicate <code>st_touches</code> (overlapping features don’t touch):</p>
+<div class="sourceCode" id="cb7"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb7-1" title="1">Ashe =<span class="st"> </span>nc[nc<span class="op">$</span>NAME <span class="op">==</span><span class="st"> &quot;Ashe&quot;</span>,]</a>
+<a class="sourceLine" id="cb7-2" title="2">nc[Ashe, op =<span class="st"> </span>st_touches]</a>
+<a class="sourceLine" id="cb7-3" title="3"><span class="co">## Simple feature collection with 3 features and 14 fields</span></a>
+<a class="sourceLine" id="cb7-4" title="4"><span class="co">## Geometry type: MULTIPOLYGON</span></a>
+<a class="sourceLine" id="cb7-5" title="5"><span class="co">## Dimension:     XY</span></a>
+<a class="sourceLine" id="cb7-6" title="6"><span class="co">## Bounding box:  xmin: 1142157 ymin: 823092 xmax: 1448920 ymax: 1035641</span></a>
+<a class="sourceLine" id="cb7-7" title="7"><span class="co">## Projected CRS: NAD83 / North Carolina (ftUS)</span></a>
+<a class="sourceLine" id="cb7-8" title="8"><span class="co">##     AREA PERIMETER CNTY_ CNTY_ID      NAME  FIPS FIPSNO CRESS_ID BIR74 SID74</span></a>
+<a class="sourceLine" id="cb7-9" title="9"><span class="co">## 2  0.061     1.231  1827    1827 Alleghany 37005  37005        3   487     0</span></a>
+<a class="sourceLine" id="cb7-10" title="10"><span class="co">## 18 0.199     1.984  1874    1874    Wilkes 37193  37193       97  3146     4</span></a>
+<a class="sourceLine" id="cb7-11" title="11"><span class="co">## 19 0.081     1.288  1880    1880   Watauga 37189  37189       95  1323     1</span></a>
+<a class="sourceLine" id="cb7-12" title="12"><span class="co">##    NWBIR74 BIR79 SID79 NWBIR79                       geometry</span></a>
+<a class="sourceLine" id="cb7-13" title="13"><span class="co">## 2       10   542     3      12 MULTIPOLYGON (((1340555 959...</span></a>
+<a class="sourceLine" id="cb7-14" title="14"><span class="co">## 18     200  3725     7     222 MULTIPOLYGON (((1402677 837...</span></a>
+<a class="sourceLine" id="cb7-15" title="15"><span class="co">## 19      17  1775     1      33 MULTIPOLYGON (((1171158 868...</span></a></code></pre></div>
+<p>Using <code>dplyr</code>, we can do the same by calling the predicate directly:</p>
+<div class="sourceCode" id="cb8"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb8-1" title="1">nc <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">filter</span>(<span class="kw">lengths</span>(<span class="kw">st_touches</span>(., Ashe)) <span class="op">&gt;</span><span class="st"> </span><span class="dv">0</span>)</a>
+<a class="sourceLine" id="cb8-2" title="2"><span class="co">## Simple feature collection with 3 features and 14 fields</span></a>
+<a class="sourceLine" id="cb8-3" title="3"><span class="co">## Geometry type: MULTIPOLYGON</span></a>
+<a class="sourceLine" id="cb8-4" title="4"><span class="co">## Dimension:     XY</span></a>
+<a class="sourceLine" id="cb8-5" title="5"><span class="co">## Bounding box:  xmin: 1142157 ymin: 823092 xmax: 1448920 ymax: 1035641</span></a>
+<a class="sourceLine" id="cb8-6" title="6"><span class="co">## Projected CRS: NAD83 / North Carolina (ftUS)</span></a>
+<a class="sourceLine" id="cb8-7" title="7"><span class="co">##    AREA PERIMETER CNTY_ CNTY_ID      NAME  FIPS FIPSNO CRESS_ID BIR74 SID74</span></a>
+<a class="sourceLine" id="cb8-8" title="8"><span class="co">## 1 0.061     1.231  1827    1827 Alleghany 37005  37005        3   487     0</span></a>
+<a class="sourceLine" id="cb8-9" title="9"><span class="co">## 2 0.199     1.984  1874    1874    Wilkes 37193  37193       97  3146     4</span></a>
+<a class="sourceLine" id="cb8-10" title="10"><span class="co">## 3 0.081     1.288  1880    1880   Watauga 37189  37189       95  1323     1</span></a>
+<a class="sourceLine" id="cb8-11" title="11"><span class="co">##   NWBIR74 BIR79 SID79 NWBIR79                       geometry</span></a>
+<a class="sourceLine" id="cb8-12" title="12"><span class="co">## 1      10   542     3      12 MULTIPOLYGON (((1340555 959...</span></a>
+<a class="sourceLine" id="cb8-13" title="13"><span class="co">## 2     200  3725     7     222 MULTIPOLYGON (((1402677 837...</span></a>
+<a class="sourceLine" id="cb8-14" title="14"><span class="co">## 3      17  1775     1      33 MULTIPOLYGON (((1171158 868...</span></a></code></pre></div>
+</div>
+<div id="aggregating-or-summarizing-feature-sets" class="section level2">
+<h2>Aggregating or summarizing feature sets</h2>
+<p>Suppose we want to compare the 1974 fraction of SID (sudden infant death) of the counties that intersect with <code>Ashe</code> to the remaining ones. We can do this by:</p>
+<div class="sourceCode" id="cb9"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb9-1" title="1">a &lt;-<span class="st"> </span><span class="kw">aggregate</span>(nc[, <span class="kw">c</span>(<span class="st">&quot;SID74&quot;</span>, <span class="st">&quot;BIR74&quot;</span>)], <span class="kw">list</span>(<span class="dt">Ashe_nb =</span> <span class="kw">lengths</span>(<span class="kw">st_intersects</span>(nc, Ashe)) <span class="op">&gt;</span><span class="st"> </span><span class="dv">0</span>), sum)</a>
+<a class="sourceLine" id="cb9-2" title="2">(a &lt;-<span class="st"> </span>a <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">mutate</span>(<span class="dt">frac74 =</span> SID74 <span class="op">/</span><span class="st"> </span>BIR74) <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">select</span>(frac74))</a>
+<a class="sourceLine" id="cb9-3" title="3"><span class="co">## Simple feature collection with 2 features and 1 field</span></a>
+<a class="sourceLine" id="cb9-4" title="4"><span class="co">## Geometry type: GEOMETRY</span></a>
+<a class="sourceLine" id="cb9-5" title="5"><span class="co">## Dimension:     XY</span></a>
+<a class="sourceLine" id="cb9-6" title="6"><span class="co">## Bounding box:  xmin: 406262.2 ymin: 48374.87 xmax: 3052887 ymax: 1044158</span></a>
+<a class="sourceLine" id="cb9-7" title="7"><span class="co">## Projected CRS: NAD83 / North Carolina (ftUS)</span></a>
+<a class="sourceLine" id="cb9-8" title="8"><span class="co">##         frac74                       geometry</span></a>
+<a class="sourceLine" id="cb9-9" title="9"><span class="co">## 1 0.0020406588 MULTIPOLYGON (((1865541 316...</span></a>
+<a class="sourceLine" id="cb9-10" title="10"><span class="co">## 2 0.0009922276 POLYGON ((1372054 837052.3,...</span></a>
+<a class="sourceLine" id="cb9-11" title="11"><span class="kw">plot</span>(a[<span class="dv">2</span>], <span class="dt">col =</span> <span class="kw">c</span>(<span class="kw">grey</span>(.<span class="dv">8</span>), <span class="kw">grey</span>(.<span class="dv">5</span>)))</a>
+<a class="sourceLine" id="cb9-12" title="12"><span class="kw">plot</span>(<span class="kw">st_geometry</span>(Ashe), <span class="dt">border =</span> <span class="st">&#39;#ff8888&#39;</span>, <span class="dt">add =</span> <span class="ot">TRUE</span>, <span class="dt">lwd =</span> <span class="dv">2</span>)</a></code></pre></div>
+<p><img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAkAAAAGwCAIAAADOgk3lAAAACXBIWXMAAA7DAAAOwwHHb6hkAAAgAElEQVR4nO3dZ1wUV/828LOFpTcBISgoCnYpChgbNtAgUcQG0ZjY440xUfTWRE00xoYFYzAYK2gETWyxYQesoCIREBUFC1WKsCy7sH2fF3OHhz82hIXlwPV9wWd3dnbmN4h77Zk5cw5LpVIRAAAA2rA1XQAAAEBdIMAAAIBKCDAAAKASAgwAAKiEAAMAACohwAAAgEoIMAAAoBICDAAAqIQAAwAAKiHAAACASggwAACgEgIMAACohAADAAAqIcAAAIBKCDAAAKASAgwAAKiEAAMAACohwAAAgEoIMAAAoBICDAAAqIQAAwAAKiHAAACASggwAACgEgIMAACohAADAAAqIcAAAIBKCDAAAKASAgwAAKiEAAMAACohwAAAgEoIMAAAoBICDAAAqIQAAwAAKiHAAACASggwAACgEgIMAACohAADAAAqIcAAAIBKCDAAAKASAgwAAKiEAAMAACohwAAAgEoIMAAAoBICDAAAqIQAAwAAKiHAAACASggwAACgEgIMAACohAADAAAqIcAAAIBKCDAAAKASAgwAAKiEAAMAACohwAAAgEoIMAAAoBICDAAAqIQAAwAAKiHAAACASggwAACgEgIMAACohAADAAAqIcAAAIBKCDAAAKASAgwAAKiEAAMAACohwAAAgEoIMAAAoBICDAAAqIQAAwAAKiHAAACASggwAACgEgIMAACohAADAAAqIcAAAIBKCDAAAKASAgwAAKiEAAMAACohwAAAgEoIMAAAoBICDAAAqIQAAwAAKiHAAACASggwAACgEgIMAACohAADAAAqIcAAAIBKCDAAAKASAgwAAKiEAAMAACohwAAAgEoIMAAAoBICDAAAqIQAAwAAKiHAAACASggwAACgEgIMAACohAADAAAqIcAAAIBKCDAAAKASAgwAAKiEAAMAACohwAAAgEoIMAAAoBICDAAAqIQAAwAAKiHAAACASggwAACgEgIMAACohAADAAAqIcAAAIBKCDAAAKASAgwAAKiEAAMAACohwAAAgEoIMAAAoBICDAAAqIQAAwAAKiHAAACASggwAACgEgIMAACohAADAAAqIcAAAIBKCDAAAKASAgwAAKiEAIOmTSolxcWkokLTdQBA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" /><!-- --></p>
+</div>
+<div id="joining-two-feature-sets-based-on-attributes" class="section level2">
+<h2>Joining two feature sets based on attributes</h2>
+<p>The usual join verbs of base R (<code>merge</code>) and of dplyr (<code>left_join</code>, etc) work for <code>sf</code> objects as well; the joining takes place on attributes (ignoring geometries). In case of no matching geometry, an empty geometry is substituted. The second argument should be a <code>data.frame</code> (or similar), not an <code>sf</code> object:</p>
+<div class="sourceCode" id="cb10"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb10-1" title="1">x =<span class="st"> </span><span class="kw">st_sf</span>(<span class="dt">a =</span> <span class="dv">1</span><span class="op">:</span><span class="dv">2</span>, <span class="dt">geom =</span> <span class="kw">st_sfc</span>(<span class="kw">st_point</span>(<span class="kw">c</span>(<span class="dv">0</span>,<span class="dv">0</span>)), <span class="kw">st_point</span>(<span class="kw">c</span>(<span class="dv">1</span>,<span class="dv">1</span>))))</a>
+<a class="sourceLine" id="cb10-2" title="2">y =<span class="st"> </span><span class="kw">data.frame</span>(<span class="dt">a =</span> <span class="dv">2</span><span class="op">:</span><span class="dv">3</span>)</a>
+<a class="sourceLine" id="cb10-3" title="3"><span class="kw">merge</span>(x, y)</a>
+<a class="sourceLine" id="cb10-4" title="4"><span class="co">## Simple feature collection with 1 feature and 1 field</span></a>
+<a class="sourceLine" id="cb10-5" title="5"><span class="co">## Geometry type: POINT</span></a>
+<a class="sourceLine" id="cb10-6" title="6"><span class="co">## Dimension:     XY</span></a>
+<a class="sourceLine" id="cb10-7" title="7"><span class="co">## Bounding box:  xmin: 1 ymin: 1 xmax: 1 ymax: 1</span></a>
+<a class="sourceLine" id="cb10-8" title="8"><span class="co">## CRS:           NA</span></a>
+<a class="sourceLine" id="cb10-9" title="9"><span class="co">##   a    geometry</span></a>
+<a class="sourceLine" id="cb10-10" title="10"><span class="co">## 1 2 POINT (1 1)</span></a>
+<a class="sourceLine" id="cb10-11" title="11"><span class="kw">merge</span>(x, y, <span class="dt">all =</span> <span class="ot">TRUE</span>)</a>
+<a class="sourceLine" id="cb10-12" title="12"><span class="co">## Simple feature collection with 3 features and 1 field (with 1 geometry empty)</span></a>
+<a class="sourceLine" id="cb10-13" title="13"><span class="co">## Geometry type: GEOMETRY</span></a>
+<a class="sourceLine" id="cb10-14" title="14"><span class="co">## Dimension:     XY</span></a>
+<a class="sourceLine" id="cb10-15" title="15"><span class="co">## Bounding box:  xmin: 0 ymin: 0 xmax: 1 ymax: 1</span></a>
+<a class="sourceLine" id="cb10-16" title="16"><span class="co">## CRS:           NA</span></a>
+<a class="sourceLine" id="cb10-17" title="17"><span class="co">##   a                 geometry</span></a>
+<a class="sourceLine" id="cb10-18" title="18"><span class="co">## 1 1              POINT (0 0)</span></a>
+<a class="sourceLine" id="cb10-19" title="19"><span class="co">## 2 2              POINT (1 1)</span></a>
+<a class="sourceLine" id="cb10-20" title="20"><span class="co">## 3 3 GEOMETRYCOLLECTION EMPTY</span></a>
+<a class="sourceLine" id="cb10-21" title="21"><span class="kw">right_join</span>(x, y)</a>
+<a class="sourceLine" id="cb10-22" title="22"><span class="co">## Joining, by = &quot;a&quot;</span></a>
+<a class="sourceLine" id="cb10-23" title="23"><span class="co">## Simple feature collection with 2 features and 1 field (with 1 geometry empty)</span></a>
+<a class="sourceLine" id="cb10-24" title="24"><span class="co">## Geometry type: POINT</span></a>
+<a class="sourceLine" id="cb10-25" title="25"><span class="co">## Dimension:     XY</span></a>
+<a class="sourceLine" id="cb10-26" title="26"><span class="co">## Bounding box:  xmin: 1 ymin: 1 xmax: 1 ymax: 1</span></a>
+<a class="sourceLine" id="cb10-27" title="27"><span class="co">## CRS:           NA</span></a>
+<a class="sourceLine" id="cb10-28" title="28"><span class="co">##   a        geom</span></a>
+<a class="sourceLine" id="cb10-29" title="29"><span class="co">## 1 2 POINT (1 1)</span></a>
+<a class="sourceLine" id="cb10-30" title="30"><span class="co">## 2 3 POINT EMPTY</span></a></code></pre></div>
+</div>
+<div id="joining-two-feature-sets-based-on-geometries" class="section level2">
+<h2>Joining two feature sets based on geometries</h2>
+<p>For joining based on spatial intersections (of any kind), <code>st_join</code> is used:</p>
+<div class="sourceCode" id="cb11"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb11-1" title="1">x =<span class="st"> </span><span class="kw">st_sf</span>(<span class="dt">a =</span> <span class="dv">1</span><span class="op">:</span><span class="dv">3</span>, <span class="dt">geom =</span> <span class="kw">st_sfc</span>(<span class="kw">st_point</span>(<span class="kw">c</span>(<span class="dv">1</span>,<span class="dv">1</span>)), <span class="kw">st_point</span>(<span class="kw">c</span>(<span class="dv">2</span>,<span class="dv">2</span>)), <span class="kw">st_point</span>(<span class="kw">c</span>(<span class="dv">3</span>,<span class="dv">3</span>))))</a>
+<a class="sourceLine" id="cb11-2" title="2">y =<span class="st"> </span><span class="kw">st_buffer</span>(x, <span class="fl">0.1</span>)</a>
+<a class="sourceLine" id="cb11-3" title="3">x =<span class="st"> </span>x[<span class="dv">1</span><span class="op">:</span><span class="dv">2</span>,]</a>
+<a class="sourceLine" id="cb11-4" title="4">y =<span class="st"> </span>y[<span class="dv">2</span><span class="op">:</span><span class="dv">3</span>,]</a>
+<a class="sourceLine" id="cb11-5" title="5"><span class="kw">plot</span>(<span class="kw">st_geometry</span>(x), <span class="dt">xlim =</span> <span class="kw">c</span>(.<span class="dv">5</span>, <span class="fl">3.5</span>))</a>
+<a class="sourceLine" id="cb11-6" title="6"><span class="kw">plot</span>(<span class="kw">st_geometry</span>(y), <span class="dt">add =</span> <span class="ot">TRUE</span>)</a></code></pre></div>
+<p><img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAkAAAAGwCAMAAAB2PiqAAAAB7FBMVEUMDAwNDQ0PDw8QEBARERESEhITExMUFBQVFRUWFhYYGBgZGRkaGhocHBwdHR0eHh4fHx8gICAjIyMkJCQmJiYpKSkrKyssLCwvLy8wMDAxMTE0NDQ1NTU2NjY3Nzc5OTk6Ojo7Ozs9PT0+Pj4/Pz9BQUFCQkJERERFRUVGRkZHR0dISEhJSUlKSkpLS0tMTExNTU1OTk5PT09SUlJTU1NVVVVYWFhZWVlaWlpcXFxdXV1eXl5fX19hYWFkZGRlZWVmZmZnZ2dpaWlqampra2ttbW1wcHBxcXF1dXV2dnZ3d3d6enp7e3t9fX2BgYGCgoKEhISFhYWIiIiJiYmKioqQkJCTk5OVlZWWlpaXl5eZmZmampqbm5ucnJydnZ2enp6fn5+goKChoaGjo6OlpaWoqKipqamqqqqrq6utra2vr6+wsLCysrKzs7O0tLS1tbW2tra3t7e5ubm6urq8vLy9vb2+vr7AwMDBwcHCwsLDw8PFxcXGxsbHx8fIyMjJycnKysrLy8vMzMzR0dHT09PV1dXW1tbX19fZ2dna2trb29vc3Nze3t7f39/i4uLk5OTl5eXm5ubp6enq6urr6+vt7e3w8PDx8fHy8vLz8/P19fX29vb39/f4+Pj5+fn6+vr7+/v9/f3+/v7///8xCex4AAAACXBIWXMAAA7DAAAOwwHHb6hkAAAG0UlEQVR4nO3b2ZNcdQGG4RCMk0DAEIwQQRBRUVxQiYoLioKyuRFBURFlUQQRFUWNCghoQCQkQbYYIkzmH7UyVmYQO1Un9Vb1OV08z0Wf079z81281TVV3bNhBYINYw9gsQmIREAkAiIREImASAREIiASAZEIiERAJAIiERCJgEgERCIgEgGRCIhEQCQCIhEQiYBIBEQiIBIBkQiIREAkAiIREImASAREIiASAZEIiERAJAIiERCJgEgERCIgEgGRCIhEQCQCIhEQiYBIBEQiIBIBkQiIREAkAiIREImASAREIiASAZEIiERAJAIiERCJgEgERCIgEgGRCIhEQCQCIhEQiYBIBEQiIBIBkQiIREAkAiIREImASAREIiASAZEIiERAJAIiERCJgEgERCIgEgGRCIhEQCQCIhEQiYBIBEQiIBIBkQiIREAkAiIREImASAREIiASAZEIiERAJAIiERCJgEgERCIgEgGRCIhEQCQCIhEQiYBIBEQiIBIBnZTX9nz7yo9e8qkbfvrPsZdMhYBOwrPXLp137W2/+M3dN31i44d+NfaaaRDQYEe+9tbr9x1/c/iucy7eO+aaqRDQUPt2Xn7w9e+Xb91851hbJkRAAz15xi1vPPrb9pvHWDItAhrm4LYZHzcHzv7R/JdMjIAGWX7fN2YdP7X5iTkPmRwBDfKDdy/PPL/9XUfnvGRqBDTEK1sfn/3g6Pk/m++SyRHQEHd++ERP7rtonjsmSEBDfPD1nzMH9r66/ua1Lc/Mfc2kCGiAIxsOrd3/4ZytOzZ+cz2hz39/jEXTIaABHjt3/fa0X66s7L/0K2sHt141xqLpENAA9+xau921+oHz4lvWvkx98JIRBk2IgAa47Qtrt9ufXr28/6HjB385b/57pkRAA9x+5drtjr+uXi784/GDRy6Y/54pEdAAP//Y2u3VNx57fWrp8PGD+z8ywqAJEdAAe89euz1w5vVPP3/Pth+uHdz81TEWTYeABljetP5Djuev2b70gd+vP/v4T0YYNCECGuKK753oycunvjDPIdMjoCEePPdE35l+d9cJHrxZCGiIo++8d/aDw2c+Ot8lkyOgQX637cWZ59d9es5DJkdAw1xz+awfBD1wxpv+33sENMyR9375//8M2rPlkRGmTIuABnrpPZ889Iaju7f8dpQpkyKgoY58cfv//C/h/ive/sRIU6ZEQMP9eseFd73039vlP39p043/GnfONAjoJCzfe9kp53/uuhuuvnTpHd96buw10yCgk/PKn+7Yvfs7DxwYe8dkCIhEQCQCIhEQiYBIBEQiIBIBkQiIREAkAiIREImASAREIiASAZEIiERAJAIiERCJgEgERCIgEgGRCIhEQCQCIhEQiYBIBEQiIBIBkQiIREAkAiIREImASAREIiASAZEIiERAJAIiERCJgEgERCIgEgGRCIhEQCQCIhEQiYBIBEQiIBIBkQiIREAkAiIREImASAREIiASAZEIiERAJAIiERCJgEgERCIgEgGRCIhEQCQCIhEQiYBIBEQiIBIBkQiIREAkAiIREImASAREIiASAZEIiERAJAIiERCJgEgERCIgEgGRCIhEQCQCIhEQiYBIBEQiIBIBkQiIREAkAiIREImASAREIiASAZEIiERAJAIiERCJgEgERCIgEgGRCIhkMQJ6Yd/RsScw2yIEtGfnprOWblkeewazLEBAD59+/8rK3y/6+tg7mGUBArrsjmOvz218eewhzLAAAW3dv3q54OGRdzDLAgT0tmdWLzsfH3kHsyxAQJ/Zfez1yc3/HnsIMyxAQP847aaDh+4768dj72CWBQho5dnPnn7KxQ+NvYKZFiEgJkxAJAIiERCJgEgERCIgEgGRCIhEQCQCIhEQiYBIBEQiIBIBkQiIREAkAiIREImASAREIiASAZEIiERAJAIiERCJgEgERCIgEgGRCIhEQCQCIhEQiYBIBEQiIBIBkQiIREAkAiIREImASAREIiASAZEIiERAJAIiERCJgEgERCIgEgGRCIhEQCQCIhEQiYBIBEQiIBIBkQiIREAkAiIREImASAREIiASAZEIiERAJAIiERCJgEgERCIgEgGRCIhEQCQCIhEQiYBIBEQiIBIBkQiIREAkAiIREImASAREIiASAZEIiERAJAIiERCJgEgERCIgEgGRCIhEQCQCIhEQiYBIBEQiIBIBkQiIREAkAiIREImASAREIiASAZEIiERAJAIiERCJgEgERCIgEgGRCIhEQCQCIhEQiYBIBEQiIBIBkQiIREAkAiIREImASAREIiASAZEIiERAJAIiERCJgEgERCIgkv8ASwyu+DvfGrYAAAAASUVORK5CYII=" /><!-- --></p>
+<p>The join method is a left join, retaining all records of the first attribute:</p>
+<div class="sourceCode" id="cb12"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb12-1" title="1"><span class="kw">st_join</span>(x, y)</a>
+<a class="sourceLine" id="cb12-2" title="2"><span class="co">## Simple feature collection with 2 features and 2 fields</span></a>
+<a class="sourceLine" id="cb12-3" title="3"><span class="co">## Geometry type: POINT</span></a>
+<a class="sourceLine" id="cb12-4" title="4"><span class="co">## Dimension:     XY</span></a>
+<a class="sourceLine" id="cb12-5" title="5"><span class="co">## Bounding box:  xmin: 1 ymin: 1 xmax: 2 ymax: 2</span></a>
+<a class="sourceLine" id="cb12-6" title="6"><span class="co">## CRS:           NA</span></a>
+<a class="sourceLine" id="cb12-7" title="7"><span class="co">##   a.x a.y        geom</span></a>
+<a class="sourceLine" id="cb12-8" title="8"><span class="co">## 1   1  NA POINT (1 1)</span></a>
+<a class="sourceLine" id="cb12-9" title="9"><span class="co">## 2   2   2 POINT (2 2)</span></a>
+<a class="sourceLine" id="cb12-10" title="10"><span class="kw">st_join</span>(y, x)</a>
+<a class="sourceLine" id="cb12-11" title="11"><span class="co">## Simple feature collection with 2 features and 2 fields</span></a>
+<a class="sourceLine" id="cb12-12" title="12"><span class="co">## Geometry type: POLYGON</span></a>
+<a class="sourceLine" id="cb12-13" title="13"><span class="co">## Dimension:     XY</span></a>
+<a class="sourceLine" id="cb12-14" title="14"><span class="co">## Bounding box:  xmin: 1.9 ymin: 1.9 xmax: 3.1 ymax: 3.1</span></a>
+<a class="sourceLine" id="cb12-15" title="15"><span class="co">## CRS:           NA</span></a>
+<a class="sourceLine" id="cb12-16" title="16"><span class="co">##   a.x a.y                           geom</span></a>
+<a class="sourceLine" id="cb12-17" title="17"><span class="co">## 2   2   2 POLYGON ((2.1 2, 2.099863 1...</span></a>
+<a class="sourceLine" id="cb12-18" title="18"><span class="co">## 3   3  NA POLYGON ((3.1 3, 3.099863 2...</span></a></code></pre></div>
+<p>and the geometry retained is that of the first argument.</p>
+<p>The spatial join predicate can be controlled with any function compatible with <code>st_intersects</code> (the default), e.g.</p>
+<div class="sourceCode" id="cb13"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb13-1" title="1"><span class="kw">st_join</span>(x, y, <span class="dt">join =</span> st_covers) <span class="co"># no matching y records: points don&#39;t cover circles</span></a>
+<a class="sourceLine" id="cb13-2" title="2"><span class="co">## Simple feature collection with 2 features and 2 fields</span></a>
+<a class="sourceLine" id="cb13-3" title="3"><span class="co">## Geometry type: POINT</span></a>
+<a class="sourceLine" id="cb13-4" title="4"><span class="co">## Dimension:     XY</span></a>
+<a class="sourceLine" id="cb13-5" title="5"><span class="co">## Bounding box:  xmin: 1 ymin: 1 xmax: 2 ymax: 2</span></a>
+<a class="sourceLine" id="cb13-6" title="6"><span class="co">## CRS:           NA</span></a>
+<a class="sourceLine" id="cb13-7" title="7"><span class="co">##   a.x a.y        geom</span></a>
+<a class="sourceLine" id="cb13-8" title="8"><span class="co">## 1   1  NA POINT (1 1)</span></a>
+<a class="sourceLine" id="cb13-9" title="9"><span class="co">## 2   2  NA POINT (2 2)</span></a>
+<a class="sourceLine" id="cb13-10" title="10"><span class="kw">st_join</span>(y, x, <span class="dt">join =</span> st_covers) <span class="co"># matches for those circles covering a point</span></a>
+<a class="sourceLine" id="cb13-11" title="11"><span class="co">## Simple feature collection with 2 features and 2 fields</span></a>
+<a class="sourceLine" id="cb13-12" title="12"><span class="co">## Geometry type: POLYGON</span></a>
+<a class="sourceLine" id="cb13-13" title="13"><span class="co">## Dimension:     XY</span></a>
+<a class="sourceLine" id="cb13-14" title="14"><span class="co">## Bounding box:  xmin: 1.9 ymin: 1.9 xmax: 3.1 ymax: 3.1</span></a>
+<a class="sourceLine" id="cb13-15" title="15"><span class="co">## CRS:           NA</span></a>
+<a class="sourceLine" id="cb13-16" title="16"><span class="co">##   a.x a.y                           geom</span></a>
+<a class="sourceLine" id="cb13-17" title="17"><span class="co">## 2   2   2 POLYGON ((2.1 2, 2.099863 1...</span></a>
+<a class="sourceLine" id="cb13-18" title="18"><span class="co">## 3   3  NA POLYGON ((3.1 3, 3.099863 2...</span></a></code></pre></div>
+</div>
+
+
+
+<!-- code folding -->
+
+
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+  (function () {
+    var script = document.createElement("script");
+    script.type = "text/javascript";
+    script.src  = "https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML";
+    document.getElementsByTagName("head")[0].appendChild(script);
+  })();
+</script>
+
+</body>
+</html>

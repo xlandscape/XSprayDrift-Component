@@ -12,6 +12,7 @@ class SprayDrift(base.Component):
     """A Landscape Model component that simulates spray-drift using XDrift."""
     # RELEASES
     VERSION = base.VersionCollection(
+        base.VersionInfo("2.3.0", "2021-11-24"),
         base.VersionInfo("2.2.2", "2021-11-18"),
         base.VersionInfo("2.2.1", "2021-10-15"),
         base.VersionInfo("2.2.0", "2021-10-12"),
@@ -112,6 +113,7 @@ class SprayDrift(base.Component):
     VERSION.changed("2.2.0", "Switched to Google docstring style")
     VERSION.changed("2.2.1", "Set working directory for module call")
     VERSION.changed("2.2.2", "Reports element names of Exposure output if working at `base_geometry` scale")
+    VERSION.changed("2.3.0", "Updated module to version 3.0")
 
     def __init__(self, name, observer, store):
         """
@@ -123,7 +125,7 @@ class SprayDrift(base.Component):
             store: The default store of the component.
         """
         super(SprayDrift, self).__init__(name, observer, store)
-        self._module = base.Module("XSprayDrift", "2.7", r"module\README.md")
+        self._module = base.Module("XSprayDrift", "3.0", r"module\README.md")
         self._inputs = base.InputContainer(self, [
             base.Input(
                 "ProcessingPath",
@@ -297,9 +299,9 @@ class SprayDrift(base.Component):
         x3df_path = os.path.join(processing_path, "sim.x3df")
         geom_path = os.path.join(x3df_path, "geom")
         # noinspection SpellCheckingInspection
-        r_exe = os.path.join(os.path.dirname(__file__), "module", "R-3.5.3", "bin", "x64", "Rscript.exe")
+        r_exe = os.path.join(os.path.dirname(__file__), "module", "R-4.1.2", "bin", "x64", "Rscript.exe")
         r_script = os.path.join(os.path.dirname(__file__), "module", "SDModel_XSprayDrift_x3df_2.R")
-        library_path = os.path.join(os.path.dirname(__file__), "module", "R-3.5.3", "library")
+        library_path = os.path.join(os.path.dirname(__file__), "module", "R-4.1.2", "library")
         base_shapefile = os.path.join(geom_path, "base.shp")
         ppm_shapefile = os.path.join(processing_path, "ppm.shp")
 

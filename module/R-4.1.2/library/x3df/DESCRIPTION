@@ -1,0 +1,13 @@
+Package: x3df
+Type: Package
+Title: What the Package Does (Title Case)
+Version: 0.0.9999
+Author: Who wrote it
+Maintainer: The package maintainer <yourself@somewhere.net>
+Description: More about what it does (maybe more than one line)
+    Use four spaces when indenting paragraphs within the Description.
+License: What license is it under?
+Encoding: UTF-8
+LazyData: true
+Imports: hdf5r, rgdal, rgeos, sp, xdrift
+Built: R 4.1.2; ; 2021-11-24 10:20:02 UTC; windows

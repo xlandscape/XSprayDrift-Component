@@ -17,12 +17,12 @@
 
 ## About the project
 The `XSpraDrift` module is an R implementation for landscape-scale simulation of spray-drift deposition based on the
-`XDrift` R package ([https://doi.org/10.1016/j.softx.2020.100610](https://doi.org/10.1016/j.softx.2020.100610)).
+`xdrift` R package ([https://doi.org/10.1016/j.softx.2020.100610](https://doi.org/10.1016/j.softx.2020.100610)).
 
 ### Built with
 `XSprayDrift` was build with the following software: 
-* [XDrift 1.0.9999](https://doi.org/10.1016/j.softx.2020.100610)
-* [R](https://cran.r-project.org) v3.5.1
+* [XDrift 1.1.0](https://doi.org/10.1016/j.softx.2020.100610)
+* [R](https://cran.r-project.org) v4.1.2
 
 
 ## Getting Started
@@ -180,7 +180,7 @@ The additional shapefile provided as input to `XSprayDrift` has the following pr
 ### Running the Module
 The module can be run from the command line by passing the input file path as parameter:
 ```cmd
-R-3.5.3\bin\x64\RScript.exe --vanilla SDModel_XSprayDrift_x3df_2.R <path_to_input_folder>
+R-4.1.2\bin\x64\RScript.exe --vanilla SDModel_XSprayDrift_x3df_2.R <path_to_input_folder>
 ```
 
 ### Output Data
@@ -189,7 +189,7 @@ and unit at the selected output scale can be retrieved from this dataset.
 
 
 ## Roadmap
-The `XSprayDrift` module is stable. No further development are ongoing at the moment.
+The `XSprayDrift` module is stable. No further development is ongoing at the moment.
 
 
 ## Contributing
@@ -202,12 +202,14 @@ Distributed under the CC0 License. See `LICENSE` for more information.
 
 ## Contact
 Thorsten Schad - thorsten.schad@bayer.com
-Sascha Bub - sascha.bub.ext@bayer.com
+Sascha Bub - sascha.bub@gmx.de
 
 
 ## Acknowledgements
 * [Apply function progress bars](https://cran.r-project.org/web/packages/pbapply)
 * [data.table](https://cran.r-project.org/web/packages/data.table)
+* [hdf5r](https://cran.r-project.org/web/packages/hdf5r/)
 * [R GDAL bindings](https://cran.r-project.org/web/packages/rgdal)
-* [sp](https://cran.r-project.org/web/packages/sp)
+* [sf](https://cran.r-project.org/web/packages/sf)
+* [terra](https://cran.r-project.org/web/packages/terra)
 * x3df
