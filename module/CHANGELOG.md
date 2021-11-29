@@ -1,6 +1,12 @@
 # CHANGELOG
 This list contains all additions, changes and fixes for the XSprayDrift module.
 
+## [3.2] - 2021-11-24
+### Added
+### Changed
+### Fixed
+- Referencing of datasets at square-meter scale that was broken after HDF library update
+
 ## [3.1] - 2021-11-24
 ### Added
 ### Changed

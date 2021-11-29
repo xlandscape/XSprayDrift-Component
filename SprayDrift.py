@@ -12,6 +12,7 @@ class SprayDrift(base.Component):
     """A Landscape Model component that simulates spray-drift using XDrift."""
     # RELEASES
     VERSION = base.VersionCollection(
+        base.VersionInfo("2.3.2", "2021-11-29"),
         base.VersionInfo("2.3.1", "2021-11-24"),
         base.VersionInfo("2.3.0", "2021-11-24"),
         base.VersionInfo("2.2.2", "2021-11-18"),
@@ -116,6 +117,7 @@ class SprayDrift(base.Component):
     VERSION.changed("2.2.2", "Reports element names of Exposure output if working at `base_geometry` scale")
     VERSION.changed("2.3.0", "Updated module to version 3.0")
     VERSION.changed("2.3.1", "Updated module to version 3.1")
+    VERSION.changed("2.3.2", "Updated module to version 3.2")
 
     def __init__(self, name, observer, store):
         """
@@ -127,7 +129,7 @@ class SprayDrift(base.Component):
             store: The default store of the component.
         """
         super(SprayDrift, self).__init__(name, observer, store)
-        self._module = base.Module("XSprayDrift", "3.1", r"module\README.md")
+        self._module = base.Module("XSprayDrift", "3.2", r"module\README.md")
         self._inputs = base.InputContainer(self, [
             base.Input(
                 "ProcessingPath",
