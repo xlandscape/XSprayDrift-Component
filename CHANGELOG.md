@@ -1,5 +1,15 @@
 # Changelog
-This is the changelog for the XSprayDrift component. It was automatically created on 2021-11-29.
+This is the changelog for the XSprayDrift component. It was automatically created on 2021-12-02.
+
+## [2.3.3] - 2021-12-02
+
+### Added
+
+### Changed
+- Updated module to version 3.3
+
+### Fixed
+
 
 ## [2.3.2] - 2021-11-29
 
