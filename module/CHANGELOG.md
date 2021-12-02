@@ -1,6 +1,12 @@
 # CHANGELOG
 This list contains all additions, changes and fixes for the XSprayDrift module.
 
+## [3.3] - 2021-12-02
+### Added
+### Changed
+### Fixed
+- Checking for cells within raster extent at square-meter scale
+
 ## [3.2] - 2021-11-24
 ### Added
 ### Changed

@@ -309,7 +309,7 @@ exposure <- pblapply(
             idx <- exposure_appl[, scale_1sqm$t(cbind(x + 1, y + 1))]
             exposure_appl[, c("i", "j") := .(idx[, 1], idx[, 2])]
             exposure_appl <- exposure_appl[
-              `between`(i, 1, exposure_ds$.f$dims[2]) & `between`(j, 1, exposure_ds$.f$dims[3])]
+              `between`(i, 1, exposure_ds$.f$dims[2]) & `between`(j, 1, exposure_ds$.f$dims[1])]
             ll <- exposure_appl[, cbind(min(i), min(j))]
             ru <- exposure_appl[, cbind(max(i), max(j))]
             exposure <- exposure_ds$.f$read(list(ll[1,2]:ru[1,2], ll[1,1]:ru[1,1], applied_geom$tDate))
