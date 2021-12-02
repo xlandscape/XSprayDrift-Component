@@ -129,7 +129,7 @@ class SprayDrift(base.Component):
             store: The default store of the component.
         """
         super(SprayDrift, self).__init__(name, observer, store)
-        self._module = base.Module("XSprayDrift", "3.2", r"module\README.md")
+        self._module = base.Module("XSprayDrift", "3.3", r"module\README.md")
         self._inputs = base.InputContainer(self, [
             base.Input(
                 "ProcessingPath",
