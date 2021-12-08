@@ -1,6 +1,13 @@
 # CHANGELOG
 This list contains all additions, changes and fixes for the XSprayDrift module.
 
+## [3.4] - 2021-12-08
+### Added
+### Changed
+- Replaced `rgdal` by `sf` package
+- Updated `x3df` package to version 0.1.9999
+### Fixed
+
 ## [3.3] - 2021-12-02
 ### Added
 ### Changed
