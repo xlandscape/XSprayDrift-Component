@@ -1,11 +1,10 @@
 # Load libraries
 library(pbapply)
 library(x3df)
-library(rgdal)
 library(hdf5r)
 library(sf)
 library(data.table)
-library(terra)
+library(terra, warn.conflicts = FALSE)
 library(xdrift)
 
 # General parameterization
@@ -100,24 +99,24 @@ if (random_seed != 0) {
 }
 
 # Load PPM Shapefile
-ppmsf <- readOGR(
+ppmsf <- st_read(
   dsn = dirname(ppm_shapefile),
   layer = substr(basename(ppm_shapefile), 1, nchar(basename(ppm_shapefile)) - 4)
 )
 
 # Transform dates
 first_day <- h5attr(day$.f, "t_offset")
-ppmsf@data$tDate <- as.integer(as.Date(ppmsf@data$Date)) - first_day + 1
+ppmsf$tDate <- as.integer(as.Date(ppmsf$Date)) - first_day + 1
 
 # Add wind directions to PPMs
-ppmsf@data$Wind.dir <- wind_direction[ppmsf@data$tDate, 1]
+ppmsf$Wind.dir <- wind_direction[ppmsf$tDate, 1]
 
 # Random wind for applications with negative wind direction
-ppmsf@data$Wind.dir[ppmsf@data$Wind.dir == 65535] <- sample(0:359, sum(ppmsf@data$Wind.dir == 65535), TRUE)
+ppmsf$Wind.dir[ppmsf$Wind.dir == 65535] <- sample(0:359, sum(ppmsf$Wind.dir == 65535), TRUE)
 
 # Up-scale wind direction into 8-dir wind
-ppmsf@data$Wind.dir <- cut(ppmsf@data$Wind.dir, seq(22.5, 360, 45), FALSE)
-ppmsf@data$Wind.dir <- ifelse(is.na(ppmsf@data$Wind.dir), 0, ppmsf@data$Wind.dir * 45)
+ppmsf$Wind.dir <- cut(ppmsf$Wind.dir, seq(22.5, 360, 45), FALSE)
+ppmsf$Wind.dir <- ifelse(is.na(ppmsf$Wind.dir), 0, ppmsf$Wind.dir * 45)
 
 # Get base geometries and habitats
 geometries <- base_geometry$get_geometries()
@@ -152,10 +151,10 @@ exposure <- pblapply(
     }
     lroi_bbox <- matrix(
       c(
-        max(lroi_bbox[1, 1], geometries@bbox[1, 1]),
-        max(lroi_bbox[2, 1], geometries@bbox[2, 1]),
-        min(lroi_bbox[1, 2], geometries@bbox[1, 2]),
-        min(lroi_bbox[2, 2], geometries@bbox[2, 2])
+        max(lroi_bbox[1, 1], st_bbox(geometries)[1]),
+        max(lroi_bbox[2, 1], st_bbox(geometries)[2]),
+        min(lroi_bbox[1, 2], st_bbox(geometries)[3]),
+        min(lroi_bbox[2, 2], st_bbox(geometries)[4])
       ), 2, 2)
     lroi_bbox_geom <- st_sfc(
       st_polygon(list(cbind(lroi_bbox[1, c(1, 2, 2, 1, 1)], lroi_bbox[2, c(1, 1, 2, 2, 1)]))),
@@ -170,7 +169,7 @@ exposure <- pblapply(
           xmax = lroi_bbox[1,2],
           ymin = lroi_bbox[2,1],
           ymax = lroi_bbox[2,2],
-          crs = geometries@proj4string@projargs,
+          crs = st_crs(geometries)$wkt,
           resolution = 1
         )
         r <- rasterize(vect(lroi_habitats), r, 2)
