@@ -133,7 +133,7 @@ class SprayDrift(base.Component):
             store: The default store of the component.
         """
         super(SprayDrift, self).__init__(name, observer, store)
-        self._module = base.Module("XSprayDrift", "3.4", r"module\README.md")
+        self._module = base.Module("XSprayDrift", "3.5", r"module\README.md")
         self._inputs = base.InputContainer(self, [
             base.Input(
                 "ProcessingPath",
@@ -460,10 +460,12 @@ class SprayDrift(base.Component):
             data_set = f["/data/day/base_geometry/spray_drift/exposure"]
             scales = "time/day, space/base_geometry"
             element_names = (None, self.inputs["Geometries"].describe()["element_names"][0])
+            offset = (simulation_start, None)
         else:
             data_set = f["/data/day/1sqm/spray_drift/exposure"]
             scales = "time/day, space_x/1sqm, space_y/1sqm"
             element_names = None
+            offset = (simulation_start, extent[0], extent[2])
         self.outputs["Exposure"].set_values(
             np.ndarray,
             shape=data_set.shape,
@@ -471,7 +473,8 @@ class SprayDrift(base.Component):
             chunks=data_set.chunks,
             scales=scales,
             unit=self._application_rate_unit,
-            element_names=element_names
+            element_names=element_names,
+            offset=offset
         )
         for chunk in base.chunk_slices(data_set.shape, tuple(x * 5 for x in data_set.chunks)):
             self.outputs["Exposure"].set_values(data_set[chunk], slices=chunk, create=False, calculate_max=True)

@@ -333,13 +333,14 @@ if (spatial_output_scale == "base_geometry") {
   result <- pbsapply(1:length(lulc_type), function(i) {
     if (`%in%`(lulc_type[i], habitat_types)) {
       habitat <- geometries[i,]
-      if (habitat@bbox[1,2] - habitat@bbox[1,1] > 1 & habitat@bbox[2,2] - habitat@bbox[2,1] > 1) {
+      habitat_bbox <- matrix(st_bbox(habitat), ncol = 2)
+      if (habitat_bbox[1,2] - habitat_bbox[1,1] > 1 & habitat_bbox[2,2] - habitat_bbox[2,1] > 1) {
         r <- rast(
-            xmin = habitat@bbox[1,1],
-            xmax = habitat@bbox[1,2],
-            ymin = habitat@bbox[2,1],
-            ymax = habitat@bbox[2,2],
-            crs = geometries@proj4string@projargs,
+            xmin = habitat_bbox[1,1],
+            xmax = habitat_bbox[1,2],
+            ymin = habitat_bbox[2,1],
+            ymax = habitat_bbox[2,2],
+            crs = st_crs(geometries)$wkt,
             resolution = 1
         )
         r <- rasterize(vect(habitat), r, 0)
