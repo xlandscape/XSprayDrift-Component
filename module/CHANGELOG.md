@@ -1,6 +1,12 @@
 # CHANGELOG
 This list contains all additions, changes and fixes for the XSprayDrift module.
 
+## [3.5] - 2021-12-10
+### Added
+### Changed
+### Fixed
+- Error in getting boundary box at base geometry scale
+
 ## [3.4] - 2021-12-08
 ### Added
 ### Changed

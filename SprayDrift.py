@@ -12,6 +12,7 @@ class SprayDrift(base.Component):
     """A Landscape Model component that simulates spray-drift using XDrift."""
     # RELEASES
     VERSION = base.VersionCollection(
+        base.VersionInfo("2.3.5", "2021-12-10"),
         base.VersionInfo("2.3.4", "2021-12-08"),
         base.VersionInfo("2.3.3", "2021-12-02"),
         base.VersionInfo("2.3.2", "2021-11-29"),
@@ -122,6 +123,8 @@ class SprayDrift(base.Component):
     VERSION.changed("2.3.2", "Updated module to version 3.2")
     VERSION.changed("2.3.3", "Updated module to version 3.3")
     VERSION.changed("2.3.4", "Updated module to version 3.4")
+    VERSION.changed("2.3.5", "Updated module to version 3.5")
+    VERSION.changed("2.3.5", "Specifies offset of outputs")
 
     def __init__(self, name, observer, store):
         """
@@ -133,7 +136,7 @@ class SprayDrift(base.Component):
             store: The default store of the component.
         """
         super(SprayDrift, self).__init__(name, observer, store)
-        self._module = base.Module("XSprayDrift", "3.4", r"module\README.md")
+        self._module = base.Module("XSprayDrift", "3.5", r"module\README.md")
         self._inputs = base.InputContainer(self, [
             base.Input(
                 "ProcessingPath",
@@ -460,10 +463,12 @@ class SprayDrift(base.Component):
             data_set = f["/data/day/base_geometry/spray_drift/exposure"]
             scales = "time/day, space/base_geometry"
             element_names = (None, self.inputs["Geometries"].describe()["element_names"][0])
+            offset = (simulation_start, None)
         else:
             data_set = f["/data/day/1sqm/spray_drift/exposure"]
             scales = "time/day, space_x/1sqm, space_y/1sqm"
             element_names = None
+            offset = (simulation_start, extent[0], extent[2])
         self.outputs["Exposure"].set_values(
             np.ndarray,
             shape=data_set.shape,
@@ -471,7 +476,8 @@ class SprayDrift(base.Component):
             chunks=data_set.chunks,
             scales=scales,
             unit=self._application_rate_unit,
-            element_names=element_names
+            element_names=element_names,
+            offset=offset
         )
         for chunk in base.chunk_slices(data_set.shape, tuple(x * 5 for x in data_set.chunks)):
             self.outputs["Exposure"].set_values(data_set[chunk], slices=chunk, create=False, calculate_max=True)
