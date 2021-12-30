@@ -308,15 +308,16 @@ exposure <- pblapply(
             idx <- exposure_appl[, scale_1sqm$t(cbind(x + 1, y + 1))]
             exposure_appl[, c("i", "j") := .(idx[, 1], idx[, 2])]
             exposure_appl <- exposure_appl[
-              `between`(i, 1, exposure_ds$.f$dims[2]) & `between`(j, 1, exposure_ds$.f$dims[1])]
+              `between`(i, 1, exposure_ds$.f$dims[2]) & `between`(j, 1, exposure_ds$.f$dims[3])]
+            exposure_appl[, j := exposure_ds$shape()[3] - j + 1]
             ll <- exposure_appl[, cbind(min(i), min(j))]
             ru <- exposure_appl[, cbind(max(i), max(j))]
-            exposure <- exposure_ds$.f$read(list(ll[1,2]:ru[1,2], ll[1,1]:ru[1,1], applied_geom$tDate))
-            coords <- cbind(exposure_appl[, j], exposure_appl[, i])
-            coords[,2] <- coords[,2] - ll[1,1] + 1
-            coords[,1] <- coords[,1] - ll[1,2] + 1
+            exposure <- exposure_ds$.f$read(list(applied_geom$tDate, ll[1,1]:ru[1,1], ll[1,2]:ru[1,2]))
+            coords <- cbind(exposure_appl[, i], exposure_appl[, j])
+            coords[,1] <- coords[,1] - ll[1,1] + 1
+            coords[,2] <- coords[,2] - ll[1,2] + 1
             exposure[coords] <- exposure[coords] + exposure_appl[, exposure]
-            exposure_ds$.f$write(list(ll[1,2]:ru[1,2], ll[1,1]:ru[1,1], applied_geom$tDate), exposure)
+            exposure_ds$.f$write(list(applied_geom$tDate, ll[1,1]:ru[1,1], ll[1,2]:ru[1,2]), exposure)
           }
         }
       }
