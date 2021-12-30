@@ -1,5 +1,16 @@
 # Changelog
-This is the changelog for the XSprayDrift component. It was automatically created on 2021-12-10.
+This is the changelog for the XSprayDrift component. It was automatically created on 2021-12-30.
+
+## [2.4] - 2021-12-30
+
+### Added
+
+### Changed
+- Updated module to version 3.6
+- Changed scale order of exposure output
+
+### Fixed
+
 
 ## [2.3.5] - 2021-12-10
 
