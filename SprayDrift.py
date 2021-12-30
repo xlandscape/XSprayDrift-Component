@@ -136,7 +136,7 @@ class SprayDrift(base.Component):
             store: The default store of the component.
         """
         super(SprayDrift, self).__init__(name, observer, store)
-        self._module = base.Module("XSprayDrift", "3.5", r"module\README.md")
+        self._module = base.Module("XSprayDrift", "3.6", r"module\README.md")
         self._inputs = base.InputContainer(self, [
             base.Input(
                 "ProcessingPath",
@@ -411,9 +411,13 @@ class SprayDrift(base.Component):
             f.create_dataset("/data/day/base_geometry/spray_drift/exposure", (simulation_length, len(geometries)),
                              np.float32, compression="gzip", chunks=(simulation_length, 1))
         else:
-            f.create_dataset("/data/day/1sqm/spray_drift/exposure", (simulation_length, raster_cols, raster_rows),
-                             np.float32, compression="gzip",
-                             chunks=base.chunk_size((1, None, None), (simulation_length, raster_cols, raster_rows)))
+            f.create_dataset(
+                "/data/day/1sqm/spray_drift/exposure",
+                (raster_rows, raster_cols, simulation_length),
+                np.float32,
+                compression="gzip",
+                chunks=base.chunk_size((None, None, 1), (raster_rows, raster_cols, simulation_length))
+            )
         random_seed = self.inputs["RandomSeed"].read().values
         if random_seed is None:
             random_seed = 0
@@ -466,9 +470,9 @@ class SprayDrift(base.Component):
             offset = (simulation_start, None)
         else:
             data_set = f["/data/day/1sqm/spray_drift/exposure"]
-            scales = "time/day, space_x/1sqm, space_y/1sqm"
+            scales = "space_y/1sqm, space_x/1sqm, time/day"
             element_names = None
-            offset = (simulation_start, extent[0], extent[2])
+            offset = (extent[2], extent[0], simulation_start)
         self.outputs["Exposure"].set_values(
             np.ndarray,
             shape=data_set.shape,

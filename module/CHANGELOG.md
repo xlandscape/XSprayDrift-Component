@@ -1,6 +1,12 @@
 # CHANGELOG
 This list contains all additions, changes and fixes for the XSprayDrift module.
 
+## [3.6] - 2021-12-30
+### Added
+### Changed
+- Order of scales for square-meter output (now y,x,t instead of t,x,y)
+### Fixed
+
 ## [3.5] - 2021-12-10
 ### Added
 ### Changed
