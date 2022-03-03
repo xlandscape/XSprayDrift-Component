@@ -352,12 +352,12 @@ class SprayDrift(base.Component):
         spatial_output_scale = self.inputs["SpatialOutputScale"].read().values
         # noinspection PyTypeChecker
         f["/data/simulation/region/ppm/shapefile"] = np.full(
-            (1, 1), ppm_shapefile, np.dtype(f"S{len(ppm_shapefile)}"))
+            (1, 1), ppm_shapefile, np.core.dtype(f"S{len(ppm_shapefile)}"))
         f["/data/simulation/region/ppm/shapefile"].attrs["set"] = True
         f["/data/simulation/region/spray_drift/params/habitat_types"] = np.full(
             (1, 1),
             self.inputs["HabitatTypes"].read().values,
-            np.dtype(f"S{len(self.inputs['HabitatTypes'].read().values)}")
+            np.core.dtype(f"S{len(self.inputs['HabitatTypes'].read().values)}")
         )
         f["/data/simulation/region/spray_drift/params/habitat_types"].attrs["set"] = True
         f["/data/simulation/region/spray_drift/params/ep_width"] = np.full((1, 1), 3, np.float32)
@@ -377,16 +377,16 @@ class SprayDrift(base.Component):
         f["/data/simulation/region/spray_drift/params/source_exposure"] = np.full(
             (1, 1),
             self.inputs["SourceExposure"].read().values,
-            np.dtype(f"S{len(self.inputs['SourceExposure'].read().values)}")
+            np.core.dtype(f"S{len(self.inputs['SourceExposure'].read().values)}")
         )
         f["/data/simulation/region/spray_drift/params/source_exposure"].attrs["set"] = True
         # noinspection PyTypeChecker
-        f["/data/simulation/region/spray_drift/params/pdf_type"] = np.full((1, 1), "gamma", np.dtype("S5"))
+        f["/data/simulation/region/spray_drift/params/pdf_type"] = np.full((1, 1), "gamma", np.core.dtype("S5"))
         f["/data/simulation/region/spray_drift/params/pdf_type"].attrs["set"] = True
         f["/data/simulation/region/spray_drift/params/crop"] = np.full(
             (1, 1),
             self.inputs["RautmannClass"].read().values,
-            np.dtype(f"S{len(self.inputs['RautmannClass'].read().values)}")
+            np.core.dtype(f"S{len(self.inputs['RautmannClass'].read().values)}")
         )
         f["/data/simulation/region/spray_drift/params/crop"].attrs["set"] = True
         f["/data/simulation/region/spray_drift/params/reporting_threshold"] = np.full((1, 1), self.inputs[
@@ -398,10 +398,10 @@ class SprayDrift(base.Component):
         f["/data/simulation/region/spray_drift/params/model"] = np.full(
             (1, 1),
             self.inputs["SprayDriftModel"].read().values,
-            np.dtype(f"S{len(self.inputs['SprayDriftModel'].read().values)}"))
+            np.core.dtype(f"S{len(self.inputs['SprayDriftModel'].read().values)}"))
         f["/data/simulation/region/spray_drift/params/model"].attrs["set"] = True
         f["/data/simulation/region/spray_drift/params/spatial_output_scale"] = np.full(
-            (1, 1), spatial_output_scale, np.dtype(f"S{len(spatial_output_scale)}"))
+            (1, 1), spatial_output_scale, np.core.dtype(f"S{len(spatial_output_scale)}"))
         f["/data/simulation/region/spray_drift/params/spatial_output_scale"].attrs["set"] = True
         f["/data/simulation/base_geometry/landscape/feature_type"] = np.full(
             (1, len(geometries)), self.inputs["LandUseLandCoverTypes"].read().values, np.uint16)
@@ -428,12 +428,12 @@ class SprayDrift(base.Component):
         f["/data/simulation/region/spray_drift/params/random_seed"].attrs["set"] = True
         if len(self.inputs["FilteringTypes"].read().values) == 0:
             # noinspection PyTypeChecker
-            f["/data/simulation/region/spray_drift/params/filtering_types"] = np.full((1, 1), " ", np.dtype("S1"))
+            f["/data/simulation/region/spray_drift/params/filtering_types"] = np.full((1, 1), " ", np.core.dtype("S1"))
         else:
             f["/data/simulation/region/spray_drift/params/filtering_types"] = np.full(
                 (1, 1),
                 self.inputs["FilteringTypes"].read().values,
-                np.dtype(f"S{len(self.inputs['FilteringTypes'].read().values)}")
+                np.core.dtype(f"S{len(self.inputs['FilteringTypes'].read().values)}")
             )
         f["/data/simulation/region/spray_drift/params/filtering_types"].attrs["set"] = True
         f["/data/simulation/region/spray_drift/params/filtering_min_width"] = np.full((1, 1), self.inputs[
@@ -445,13 +445,13 @@ class SprayDrift(base.Component):
         f["/data/simulation/region/spray_drift/params/boom_height"] = np.full(
             (1, 1),
             self.inputs["AgDriftBoomHeight"].read().values,
-            np.dtype(f"S{len(self.inputs['AgDriftBoomHeight'].read().values)}")
+            np.core.dtype(f"S{len(self.inputs['AgDriftBoomHeight'].read().values)}")
         )
         f["/data/simulation/region/spray_drift/params/boom_height"].attrs["set"] = True
         f["/data/simulation/region/spray_drift/params/droplet_size"] = np.full(
             (1, 1),
             self.inputs["AgDriftDropletSize"].read().values,
-            np.dtype(f"S{len(self.inputs['AgDriftDropletSize'].read().values)}")
+            np.core.dtype(f"S{len(self.inputs['AgDriftDropletSize'].read().values)}")
         )
         f["/data/simulation/region/spray_drift/params/droplet_size"].attrs["set"] = True
         f["/data/simulation/region/spray_drift/params/ag_drift_quantile"] = np.full((1, 1), self.inputs[
