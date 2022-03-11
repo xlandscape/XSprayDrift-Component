@@ -1,6 +1,12 @@
 # CHANGELOG
 This list contains all additions, changes and fixes for the XSprayDrift module.
 
+## [3.7] - 2022-03-11
+### Added
+### Changed
+- Small changes to increase code quality
+### Fixed
+
 ## [3.6] - 2021-12-30
 ### Added
 ### Changed

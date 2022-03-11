@@ -88,10 +88,7 @@ lulc_type <-
   f$get_dataset(c(simulation, base_geometry), "landscape/feature_type")$get_values()
 
 # Get values @ day/region
-wind_direction <-
-  f$force_scaling(c(day, region),
-                  "weather/wind_direction",
-                  c(SimpleDownscaling(f, c(simulation, region))))
+wind_direction <- f$force_scaling(c(day, region), "weather/wind_direction", SimpleDownscaling(f, c(simulation, region)))
 
 # Set seed if specified
 if (random_seed != 0) {
@@ -174,7 +171,7 @@ exposure <- pblapply(
         )
         r <- rasterize(vect(lroi_habitats), r, 2)
         r <- rasterize(vect(applied_geom), r, 1, update = TRUE)
-        local_roi <- data.table(id = 1:ncell(r), lulc = c(r[]))[!is.nan(lulc)]
+        local_roi <- data.table(id = 1:ncell(r), lulc = r[])[!is.nan(lulc)]
         local_roi[, c("x", "y") := .(xFromCell(r, id), yFromCell(r, id))]
         local_roi[, ep := bands(x, y, applied_geom$Wind.dir, ep_width, "meteorological")]
         dist <- local_roi[
@@ -331,7 +328,7 @@ if (spatial_output_scale == "base_geometry") {
   idx <- exposure[, scale_1sqm$t(cbind(x + 1, y + 1))]
   exposure <- data.table(x = idx[, 1], y = idx[, 2], t = exposure[, t], exposure = exposure[, exposure])
   setkeyv(exposure, c("x", "y"))
-  result <- pbsapply(1:length(lulc_type), function(i) {
+  result <- pbsapply(seq_along(lulc_type), function(i) {
     if (`%in%`(lulc_type[i], habitat_types)) {
       habitat <- geometries[i,]
       habitat_bbox <- matrix(st_bbox(habitat), ncol = 2)
@@ -345,7 +342,7 @@ if (spatial_output_scale == "base_geometry") {
             resolution = 1
         )
         r <- rasterize(vect(habitat), r, 0)
-        dt <- data.table(id = 1:ncell(r), lulc = c(r[]))[!is.nan(lulc)]
+        dt <- data.table(id = 1:ncell(r), lulc = r[])[!is.nan(lulc)]
         dt[, c("x", "y") := list(xFromCell(r, id), yFromCell(r, id))]
         idx <- dt[, scale_1sqm$t(cbind(x + 1, y + 1))]
         dt <- data.table(x = idx[, 1], y = idx[, 2])
