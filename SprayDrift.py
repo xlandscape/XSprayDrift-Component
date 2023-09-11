@@ -12,6 +12,7 @@ class SprayDrift(base.Component):
     """A Landscape Model component that simulates spray-drift using XDrift."""
     # RELEASES
     VERSION = base.VersionCollection(
+        base.VersionInfo("2.5.2", "2023-09-11"),
         base.VersionInfo("2.5.1", "2022-04-06"),
         base.VersionInfo("2.5.0", "2022-03-11"),
         base.VersionInfo("2.4.1", "2022-03-03"),
@@ -134,6 +135,7 @@ class SprayDrift(base.Component):
     VERSION.changed("2.4.1", "Mitigated weak code warnings")
     VERSION.changed("2.5.0", "Updated module to version 3.7")
     VERSION.changed("2.5.1", "Reverted to version 2.4.1")
+    VERSION.added("2.5.2", "Information on runtime environment")
 
     def __init__(self, name, observer, store):
         """
