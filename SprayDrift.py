@@ -12,6 +12,7 @@ class SprayDrift(base.Component):
     """A Landscape Model component that simulates spray-drift using XDrift."""
     # RELEASES
     VERSION = base.VersionCollection(
+        base.VersionInfo("2.5.3", "2023-09-12"),
         base.VersionInfo("2.5.2", "2023-09-11"),
         base.VersionInfo("2.5.1", "2022-04-06"),
         base.VersionInfo("2.5.0", "2022-03-11"),
@@ -136,6 +137,10 @@ class SprayDrift(base.Component):
     VERSION.changed("2.5.0", "Updated module to version 3.7")
     VERSION.changed("2.5.1", "Reverted to version 2.4.1")
     VERSION.added("2.5.2", "Information on runtime environment")
+    VERSION.changed("2.5.3", "Extended module information for R runtime environment")
+    VERSION.added("2.5.3", "Creation of repository info during documentation")
+    VERSION.added("2.5.3", "Repository info to module")
+    VERSION.added("2.5.3", "Repository info to R runtime environment")
 
     def __init__(self, name, observer, store):
         """
@@ -152,7 +157,15 @@ class SprayDrift(base.Component):
             "3.6",
             "module",
             r"module\README.md",
-            base.Module("R", "4.1.2", "module/R-4.1.2", "module/R-4.1.2/doc/NEWS", None)
+            base.Module(
+                "R",
+                "4.1.2",
+                "module/R-4.1.2",
+                "module/R-4.1.2/README",
+                None,
+                True,
+                "module/R-4.1.2/doc/NEWS"
+            )
         )
         self._inputs = base.InputContainer(self, [
             base.Input(
