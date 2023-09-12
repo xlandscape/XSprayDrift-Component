@@ -11,3 +11,9 @@ base.documentation.write_changelog(
     XSprayDrift.SprayDrift.VERSION,
     os.path.join(root_folder, "..", "variant", "XSprayDrift", "CHANGELOG.md")
 )
+base.documentation.write_repository_info(
+    os.path.join(root_folder, "..", "variant", "XSprayDrift"),
+    os.path.join(root_folder, "..", "variant", "XSprayDrift", "repository.json"),
+    os.path.join(root_folder, "..", "..", "..", "versions.json"),
+    "component"
+)

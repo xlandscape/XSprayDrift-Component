@@ -152,7 +152,15 @@ class SprayDrift(base.Component):
             "3.6",
             "module",
             r"module\README.md",
-            base.Module("R", "4.1.2", "module/R-4.1.2", "module/R-4.1.2/doc/NEWS", None)
+            base.Module(
+                "R",
+                "4.1.2",
+                "module/R-4.1.2",
+                "module/R-4.1.2/README",
+                None,
+                True,
+                "module/R-4.1.2/doc/NEWS"
+            )
         )
         self._inputs = base.InputContainer(self, [
             base.Input(
