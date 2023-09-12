@@ -1,6 +1,22 @@
 # Changelog
 
-This is the changelog for the XSprayDrift component. It was automatically created on 2023-09-11.
+This is the changelog for the XSprayDrift component. It was automatically created on 2023-09-12.
+
+## [2.5.3] - 2023-09-12
+
+### Added
+
+- Creation of repository info during documentation
+
+- Repository info to module
+
+- Repository info to R runtime environment
+
+### Changed
+
+- Extended module information for R runtime environment
+
+### Fixed
 
 ## [2.5.2] - 2023-09-11
 
