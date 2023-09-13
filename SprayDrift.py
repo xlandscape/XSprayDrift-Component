@@ -211,7 +211,11 @@ class SprayDrift(base.Component):
                 (attrib.Class(float, 1), attrib.Unit("m", 1), attrib.Scales("global", 1)),
                 self.default_observer
             ),
-            base.Input("EPDistanceSD", (attrib.Class(float, 1), attrib.Unit("m", 1)), self.default_observer),
+            base.Input(
+                "EPDistanceSD",
+                (attrib.Class(float, 1), attrib.Unit("m", 1), attrib.Scales("global")),
+                self.default_observer
+            ),
             base.Input(
                 "ReportingThreshold",
                 (attrib.Class(float, 1), attrib.Unit("g/ha", 1), attrib.Scales("global", 1)),
@@ -281,7 +285,11 @@ class SprayDrift(base.Component):
                 (attrib.Class(str, 1), attrib.Unit(None, 1), attrib.Scales("global", 1)),
                 self.default_observer
             ),
-            base.Input("RandomSeed", (attrib.Class(int, 1), attrib.Unit(None, 1)), self.default_observer),
+            base.Input(
+                "RandomSeed",
+                (attrib.Class(int, 1), attrib.Unit(None, 1), attrib.Scales("global")),
+                self.default_observer
+            ),
             base.Input(
                 "FilteringTypes",
                 (attrib.Class(list[int], 1), attrib.Unit(None, 1), attrib.Scales("global", 1)),
@@ -498,11 +506,13 @@ class SprayDrift(base.Component):
             scales = "time/day, space/base_geometry"
             element_names = (None, self.inputs["Geometries"].describe()["element_names"][0])
             offset = (simulation_start, None)
+            geometries= (None, self.inputs["Geometries"].describe()["geometries"][0])
         else:
             data_set = f["/data/day/1sqm/spray_drift/exposure"]
             scales = "space_y/1sqm, space_x/1sqm, time/day"
             element_names = None
             offset = (extent[2], extent[0], simulation_start)
+            geometries = (None, None, None)
         self.outputs["Exposure"].set_values(
             np.ndarray,
             shape=data_set.shape,
@@ -511,7 +521,8 @@ class SprayDrift(base.Component):
             scales=scales,
             unit=self._application_rate_unit,
             element_names=element_names,
-            offset=offset
+            offset=offset,
+            geometries=geometries
         )
         for chunk in base.chunk_slices(data_set.shape, tuple(x * 5 for x in data_set.chunks)):
             self.outputs["Exposure"].set_values(data_set[chunk], slices=chunk, create=False, calculate_max=True)
