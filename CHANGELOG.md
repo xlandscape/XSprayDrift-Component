@@ -1,6 +1,18 @@
 # Changelog
 
-This is the changelog for the XSprayDrift component. It was automatically created on 2023-09-12.
+This is the changelog for the XSprayDrift component. It was automatically created on 2023-09-13.
+
+## [2.5.4] - 2023-09-13
+
+### Added
+
+- Scales to `EPDistanceSD` and `RandomSeed` inputs
+
+### Changed
+
+- Report geometries of Exposure output if output scale is base_geometry
+
+### Fixed
 
 ## [2.5.3] - 2023-09-12
 
