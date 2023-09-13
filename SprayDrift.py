@@ -12,6 +12,7 @@ class SprayDrift(base.Component):
     """A Landscape Model component that simulates spray-drift using XDrift."""
     # RELEASES
     VERSION = base.VersionCollection(
+        base.VersionInfo("2.5.4", "2023-09-13"),
         base.VersionInfo("2.5.3", "2023-09-12"),
         base.VersionInfo("2.5.2", "2023-09-11"),
         base.VersionInfo("2.5.1", "2022-04-06"),
@@ -141,6 +142,8 @@ class SprayDrift(base.Component):
     VERSION.added("2.5.3", "Creation of repository info during documentation")
     VERSION.added("2.5.3", "Repository info to module")
     VERSION.added("2.5.3", "Repository info to R runtime environment")
+    VERSION.added("2.5.4", "Scales to `EPDistanceSD` and `RandomSeed` inputs")
+    VERSION.changed("2.5.4", "Report geometries of Exposure output if output scale is base_geometry")
 
     def __init__(self, name, observer, store):
         """
