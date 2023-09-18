@@ -9,9 +9,18 @@ import attrib
 
 
 class SprayDrift(base.Component):
-    """A Landscape Model component that simulates spray-drift using XDrift."""
+    """
+    A Landscape Model component that simulates spray-drift using XDrift. XDrift is an R package that supports the use
+    of different spray-drift models (the 90th percentile Rautmann et al. model, AgDrift and XSprayDrift) in a
+    landscape-context. It internally represents the landscape as point clouds of (in-field) deposition sources and
+    (off-field) deposition sinks in habitats. It models spray-drift exposure trajectories from the sinks in downwind
+    direction and adds deposition to the sinks if they are intersected by a trajectory. XDrift also allows to apply
+    drift-filtering models, one that is based on a fixed probability density function, and one that is based on
+    drift-filtering vegetation that is intersected by exposure trajectories.
+    """
     # RELEASES
     VERSION = base.VersionCollection(
+        base.VersionInfo("2.5.5", "2023-09-18"),
         base.VersionInfo("2.5.4", "2023-09-13"),
         base.VersionInfo("2.5.3", "2023-09-12"),
         base.VersionInfo("2.5.2", "2023-09-11"),
@@ -144,6 +153,9 @@ class SprayDrift(base.Component):
     VERSION.added("2.5.3", "Repository info to R runtime environment")
     VERSION.added("2.5.4", "Scales to `EPDistanceSD` and `RandomSeed` inputs")
     VERSION.changed("2.5.4", "Report geometries of Exposure output if output scale is base_geometry")
+    VERSION.changed("2.5.5", "Updated component description")
+    VERSION.added("2.5.5", "Input descriptions")
+    VERSION.added("2.5.5", "Runtime warnings and notes regarding status of component and documentation")
 
     def __init__(self, name, observer, store):
         """
@@ -173,164 +185,328 @@ class SprayDrift(base.Component):
         self._inputs = base.InputContainer(self, [
             base.Input(
                 "ProcessingPath",
-                (attrib.Class(str, 1), attrib.Unit(None, 1), attrib.Scales("global", 1)),
-                self.default_observer),
+                (attrib.Class(str), attrib.Unit(None), attrib.Scales("global")),
+                self.default_observer,
+                description="The path in the file system where the component can store temporary working data. The "
+                            "path will be created during the run of the component and is not allowed to previously "
+                            "exist."
+            ),
             base.Input(
                 "SimulationStart",
-                (attrib.Class(datetime.date, 1), attrib.Unit(None, 1), attrib.Scales("global", 1)),
-                self.default_observer
+                (attrib.Class(datetime.date), attrib.Unit(None), attrib.Scales("global")),
+                self.default_observer,
+                description="The first date for which spray-drift exposure is simulated. This should be a date before "
+                            "the earliest application date in the `ApplicationDates` input."
             ),
             base.Input(
                 "SimulationEnd",
-                (attrib.Class(datetime.date, 1), attrib.Unit(None, 1), attrib.Scales("global", 1)),
-                self.default_observer
+                (attrib.Class(datetime.date), attrib.Unit(None), attrib.Scales("global")),
+                self.default_observer,
+                description="The last date (inclusive) for which spray-drift exposure is simulated. This should be a "
+                            "date after the latest application date in the `ApplicationDates` input."
             ),
             base.Input(
                 "Geometries",
-                (
-                    attrib.Class(list[bytes], 1),
-                    attrib.Unit(None, 1),
-                    attrib.Scales("space/base_geometry", 1)
-                ),
-                self.default_observer
+                (attrib.Class(list[bytes]), attrib.Unit(None), attrib.Scales("space/base_geometry")),
+                self.default_observer,
+                description="A geospatial representation of landscape elements in Well-Known-Byte representation. "
+                            "Landscape elements should include at least fields that are targets of spray-applications, "
+                            "habitats that potentially receive spray-drift deposition and landscape features that "
+                            "have the potential to reduce downwind spray-drift deposition. The input may also include "
+                            "other landscape elements that have no relevance for spray-drift simulation."
             ),
             base.Input(
                 "GeometryCrs",
-                (attrib.Class(str, 1), attrib.Unit(None, 1), attrib.Scales("global", 1)),
-                self.default_observer
+                (attrib.Class(str), attrib.Unit(None), attrib.Scales("global")),
+                self.default_observer,
+                description="The definition of the spatial coordinate reference systems in which the landscape "
+                            "elements in the `Geometries` input are represented. The coordinate system must be given "
+                            "in its Well-Known-Text representation. This input will be removed in a future version of "
+                            "`XSprayDrift`."
             ),
             base.Input(
                 "Extent",
-                (attrib.Class(tuple[float], 1), attrib.Unit("metre", 1), attrib.Scales("space/extent", 1)),
-                self.default_observer
+                (attrib.Class(tuple[float]), attrib.Unit("metre"), attrib.Scales("space/extent")),
+                self.default_observer,
+                description="The geographic extent for which spray-drift exposure should be simulated. This input "
+                            "defines the extent of the 1-square meter `Exposure` output. The extent must be given in "
+                            "coordinate reference system given in the `GeometryCrs` input and must follow the format "
+                            "`x-min`, `x-max`, `y-min`, `y-max`."
             ),
             base.Input(
                 "HabitatTypes",
-                (attrib.Class(str, 1), attrib.Unit(None, 1), attrib.Scales("global", 1)),
-                self.default_observer
+                (attrib.Class(str), attrib.Unit(None), attrib.Scales("global")),
+                self.default_observer,
+                description="A list of land use and land cover classes that should be considered habitats. Only "
+                            "1-square meter cells within geometries in the `Geometries` input that are of the listed "
+                            "types according to the `LandUseLandCoverTypes` input will receive spray-drift exposure, "
+                            "if they are located in a downwind trajectory of the exposure sources. All other square "
+                            "meters that are not of a habitat type (and are not within an applied area), will report "
+                            "an exposure of 0 for every day."
             ),
             base.Input(
                 "FieldDistanceSD",
-                (attrib.Class(float, 1), attrib.Unit("m", 1), attrib.Scales("global", 1)),
-                self.default_observer
+                (attrib.Class(float), attrib.Unit("m"), attrib.Scales("global")),
+                self.default_observer,
+                description="Setting the `FieldDistanceSD` to a value greater than 0 varies the distances from the "
+                            "source points of exposure along the boundary of the applied geometries (see `Geometries` "
+                            "input) to the receptors of exposure in the habitats (see `HabitatTypes` input) by a "
+                            "normal distribution with mean 0 and the given value as standard deviation at the field "
+                            "scale. Setting the input to a value of 0 results in the unaltered usage of the distances "
+                            "as calculated by the geospatial operations."
             ),
             base.Input(
                 "EPDistanceSD",
-                (attrib.Class(float, 1), attrib.Unit("m", 1), attrib.Scales("global")),
-                self.default_observer
+                (attrib.Class(float), attrib.Unit("m"), attrib.Scales("global")),
+                self.default_observer,
+                description="Setting the `EPDistanceSD` to a value greater than 0 varies the distances from the "
+                            "source points of exposure along the boundary of the applied geometries (see `Geometries` "
+                            "input) to the receptors of exposure in the habitats (see `HabitatTypes` input) by a "
+                            "normal distribution with mean 0 and the given value as standard deviation at the exposure "
+                            "path scale. This scale describes the variation of exposure along the field boundary, "
+                            "typically in bands of 3m width. The variation at the exposure path scale is superimposed "
+                            "to the variation applied at the field scale (see `FieldDistanceSD`)."
             ),
             base.Input(
                 "ReportingThreshold",
-                (attrib.Class(float, 1), attrib.Unit("g/ha", 1), attrib.Scales("global", 1)),
-                self.default_observer
+                (attrib.Class(float), attrib.Unit("g/ha"), attrib.Scales("global")),
+                self.default_observer,
+                description="Setting the `ReportingThreshold` input to a value greater than 0 results in exposure less "
+                            "than this value being reported as 0. This avoids reporting very small concentrations that "
+                            "can appear as numerical artifacts, but care should be taken not to truncate relevant "
+                            "exposure concentrations."
             ),
             base.Input(
                 "ApplySimpleDriftFiltering",
-                (attrib.Class(bool, 1), attrib.Unit(None, 1), attrib.Scales("global", 1)),
-                self.default_observer
+                (attrib.Class(bool), attrib.Unit(None), attrib.Scales("global")),
+                self.default_observer,
+                description="The `ApplySimpleDriftFiltering` input defines whether a simple drift filtering model is "
+                            "applied for the simulation of spray-drift exposure. If set to `True`, a fixed "
+                            "probabilistic function is applied per 3m exposure band along the field boundary which "
+                            "reduces drift deposition by a fixed amount: by 25% with 4.4% probability, by 50% with "
+                            "22.2% probability, by 75% with 33.3% probability, and by 90% with 40.0% probability."
             ),
             base.Input(
                 "LandUseLandCoverTypes",
-                (
-                    attrib.Class(list[int], 1),
-                    attrib.Unit(None, 1),
-                    attrib.Scales("space/base_geometry", 1)
-                ),
-                self.default_observer
+                (attrib.Class(list[int]), attrib.Unit(None), attrib.Scales("space/base_geometry")),
+                self.default_observer,
+                description="Associates each geometry in the `Geometries` input with a land use/land cover type. The "
+                            "type is used to decide whether the geometry is a habitat (see input `HabitatTypes`) and, "
+                            "if `ApplySimpleDriftFiltering` is set to `True`, whether it is a drift-filtering "
+                            "landscape feature."
             ),
             base.Input(
                 "WindDirection",
-                (attrib.Class(int, 1), attrib.Unit("deg", 1), attrib.Scales("global", 1)),
-                self.default_observer
+                (attrib.Class(int), attrib.Unit("deg"), attrib.Scales("global")),
+                self.default_observer,
+                description="Sets a wind direction at a global scale, i.e., direction of wind is always and everywhere "
+                            "the value of this input. Wind direction is given in a meteorological notation, i.e., as "
+                            "the direction where the wind is blowing from. For instance, a value of `270` would "
+                            "describe wind that is blowing from West to East. If you specify the `WindDirection` as "
+                            "`-1`, the spray-drift component will sample a random wind-direction at an application "
+                            "scale based on a uniform distribution across the windrose."
             ),
             base.Input(
                 "SprayDriftModel",
-                (attrib.Class(str, 1), attrib.Unit(None, 1), attrib.Scales("global", 1)),
-                self.default_observer
+                (
+                    attrib.Class(str),
+                    attrib.Unit(None),
+                    attrib.Scales("global"),
+                    attrib.InList(("XSprayDrift", "90thRautmann", "AgDrift"))
+                ),
+                self.default_observer,
+                description="The `SprayDriftModel` input defines which model is used by the `XSprayDrift` to calculate "
+                            "the fraction of drift that deposits at a given distance from the field boundary. The "
+                            "`90thRautmann` model uses the deterministic values derived by the work of Rautmann et al. "
+                            "and that are used during lower-tier regulatory risk assessment. They represent the 90th "
+                            "percentile of drift-deposition found during a series of field trials in different types "
+                            "of crops (see `RautmannClass` input). The `XSprayDrift` model is based on the same "
+                            "empirical data of the Rautmann et al. field trials, but preserves variability by "
+                            "representing drift-deposition as probability density functions. For each band of 3m along "
+                            "the field edge, a quantile is uniformly sampled, and all sinks along the trajectory of "
+                            "this band receive spray-drift deposition according to the sampled quantile and the "
+                            "distance-dependent probability density function. The `AgDrift` model represents the "
+                            "deposition as assumed in the US regulatory risk assessment."
             ),
             base.Input(
                 "SourceExposure",
-                (attrib.Class(str, 1), attrib.Unit("g/ha", 1), attrib.Scales("global", 1)),
-                self.default_observer
+                (attrib.Class(str), attrib.Unit("g/ha"), attrib.Scales("global")),
+                self.default_observer,
+                description="The `SourceExposure` input specify, which spray-drift depositions are reported by the "
+                            "`XSprayDrift` component for the 1-square meter cells that are located within applied "
+                            "areas. A value of `NA` or `0` does not report any spray-drift deposition for these cells. "
+                            "Another sensible value would be the application rate, resulting in the deposition of the "
+                            "applied 1-square meter cells as being reported as the according value."
             ),
             base.Input(
                 "RautmannClass",
-                (attrib.Class(str, 1), attrib.Unit(None, 1), attrib.Scales("global", 1)),
-                self.default_observer
+                (
+                    attrib.Class(str),
+                    attrib.Unit(None),
+                    attrib.Scales("global"),
+                    attrib.InList(("arable", "vines", "orchards.early", "orchards.late", "hops"))
+                ),
+                self.default_observer,
+                description="If using the `XSprayDrift` or `Rautmann90th` model as `SprayDriftModel`, the value of the "
+                            "`RautmannClass` specifies which series of field trial data is used for the "
+                            "distance-dependant calculation of spray-drift exposure. The `RautmannClass` should fit "
+                            "the characteristics of the actual applied crops during simulation."
             ),
             base.Input(
                 "AppliedFields",
-                (attrib.Class(np.ndarray, 1), attrib.Unit(None, 1), attrib.Scales("other/application", 1)),
-                self.default_observer
+                (attrib.Class(np.ndarray), attrib.Unit(None), attrib.Scales("other/application")),
+                self.default_observer,
+                description="The names of the applied fields. This information was used to link applications to "
+                            "individual fields, but is no longer used. The `AppliedFields` input will therefore be "
+                            "removed from the `XSprayDrift` component in a future version."
             ),
             base.Input(
                 "ApplicationDates",
-                (attrib.Class(np.ndarray, 1), attrib.Unit(None, 1), attrib.Scales("other/application", 1)),
-                self.default_observer
+                (attrib.Class(np.ndarray), attrib.Unit(None), attrib.Scales("other/application")),
+                self.default_observer,
+                description="The dates when the applications take place. Dates are represented as the number of days "
+                            "since the 1st January of the year 0."
             ),
             base.Input(
                 "ApplicationRates",
-                (attrib.Class(np.ndarray, 1), attrib.Unit("g/ha", 1), attrib.Scales("other/application", 1)),
-                self.default_observer
+                (attrib.Class(np.ndarray), attrib.Unit("g/ha"), attrib.Scales("other/application")),
+                self.default_observer,
+                description="The rates at which the substance is applied. Because the `XSprayDrift` component operates "
+                            "with fractions of the application rates, regardless of their physical unit, the "
+                            "`Exposure` output will have the same unit as the `ApplicationRates` input."
             ),
             base.Input(
                 "TechnologyDriftReductions",
-                (attrib.Class(np.ndarray, 1), attrib.Unit("1", 1), attrib.Scales("other/application", 1)),
-                self.default_observer
+                (attrib.Class(np.ndarray), attrib.Unit("1"), attrib.Scales("other/application")),
+                self.default_observer,
+                description="The drift reduction by the equipment used for spray-applications is expressed as a number "
+                            "between `0` and `1` that specifies by which fraction the simulated drift-deposition is "
+                            "reduced prior reporting. A value of `0` results in no drift-reduction and the reporting "
+                            "of depositions as output by the spray-drift model, whereas a value of `1` would indicate "
+                            "that spray-drift deposition is entirely prevented by technology, resulting in the "
+                            "reporting of depositions of `0`."
             ),
             base.Input(
                 "AppliedAreas",
-                (attrib.Class(list[bytes], 1), attrib.Unit(None, 1), attrib.Scales("other/application", 1)),
-                self.default_observer
+                (attrib.Class(list[bytes]), attrib.Unit(None), attrib.Scales("other/application")),
+                self.default_observer,
+                description="The areas that receive spray-applications, given in Well-Known-Byte representation. "
+                            "Internally, the areas will be rasterized at a 1-square meter resolution and the raster "
+                            "cells forming the inner boundary of the areas will be considered as individual source "
+                            "points of spray-drift exposure."
             ),
             base.Input(
                 "SpatialOutputScale",
-                (attrib.Class(str, 1), attrib.Unit(None, 1), attrib.Scales("global", 1)),
-                self.default_observer
+                (
+                    attrib.Class(str),
+                    attrib.Unit(None),
+                    attrib.Scales("global"),
+                    attrib.InList(("1sqm", "base_geometry"))
+                ),
+                self.default_observer,
+                description="The native spatial output scale of the `XSprayDrift` component is one square-meter. That "
+                            "is spray-deposition is by default reported as a 1-square meter raster across the "
+                            "landscape, as defined by the `Extent` input. However, the component is also able to "
+                            "provide spray-deposition on a base_geometry scale. In this case, deposition is reported "
+                            "for every geometry in the `Geometries` input by calculating the average deposition over "
+                            "all 1-square meter cells within the geometry. Geometries that are not associated with a "
+                            "habitat type (see `HabitatTypes` input) according to the `LandUseLandCoverTypes` input "
+                            "do not receive any spray-drift depositions and a value of `0` is reported for them."
             ),
             base.Input(
                 "RandomSeed",
-                (attrib.Class(int, 1), attrib.Unit(None, 1), attrib.Scales("global")),
-                self.default_observer
+                (attrib.Class(int), attrib.Unit(None), attrib.Scales("global")),
+                self.default_observer,
+                description="Allows to fix a seed for the random sampling of wind directions and deposition quantiles "
+                            "if the `WindDirection` input is set tp `-1` or `XSprayDrift` is used as spray-drift model "
+                            "(see `SprayDriftModel` input). Fixing the seed can help for debugging or demonstration "
+                            "purposes. A value of `0` is not used as seed but results in a randomly sampled seed."
             ),
             base.Input(
                 "FilteringTypes",
-                (attrib.Class(list[int], 1), attrib.Unit(None, 1), attrib.Scales("global", 1)),
-                self.default_observer
+                (attrib.Class(list[int]), attrib.Unit(None), attrib.Scales("global")),
+                self.default_observer,
+                description="The `FilteringTypes` specifies types of landscape elements, as defined by the "
+                            "`LandUseLandCoverTypes`, that are able to reduce downwind spray-drift depositions through "
+                            "filtering, e.g., hedges. Individual trajectories of exposure, originating at source "
+                            "points and pointing in downwind direction, are geometrically intersected with the "
+                            "geometries of the landscape elements. If a trajectory thereby intersects with an element "
+                            "having one of the filtering types as listed in the `FilteringTypes` input, "
+                            "drift-filtering may occur, depending on the values of the `FilterMinWidth` and "
+                            "`FilteringFraction` inputs."
             ),
             base.Input(
                 "FilteringMinWidth",
-                (attrib.Class(float, 1), attrib.Unit("m", 1), attrib.Scales("global", 1)),
-                self.default_observer
+                (attrib.Class(float), attrib.Unit("m"), attrib.Scales("global")),
+                self.default_observer,
+                description="The `FilteringMinWidth` defines a minimum length that an exposure trajectory must "
+                            "intersect a filtering landscape element (see `FilteringTypes` input), before it is "
+                            "actually considered for a drift-filtering effect."
             ),
             base.Input(
                 "FilteringFraction",
-                (attrib.Class(float, 1), attrib.Unit("1", 1), attrib.Scales("global", 1)),
-                self.default_observer
+                (attrib.Class(float), attrib.Unit("1"), attrib.Scales("global")),
+                self.default_observer,
+                description="The value of the `FilteringFraction` specifies the magnitude of the filter effect if "
+                            "filtering takes place (see `FilteringTypes` and `FilteringMinWidth` inputs). All 1-square "
+                            "meter cells along the spray-drift trajectory which are located downwind will receive a "
+                            "deposition reduced according to the `FilteringFraction` value. A value of `0` thereby "
+                            "results in no drift-filtering at all, a value of `1` in complete filtering, i.e., "
+                            "downwind cells will receive no deposition at all. Values outside the range of `0` and `1` "
+                            "are not allowed."
             ),
             base.Input(
                 "MinimumDistanceToField",
-                (attrib.Class(float, 1), attrib.Unit("m", 1), attrib.Scales("global", 1)),
-                self.default_observer
+                (attrib.Class(float), attrib.Unit("m"), attrib.Scales("global")),
+                self.default_observer,
+                description="This input defines a lower threshold for distances between sources of exposure (within "
+                            "applied areas) and sinks of exposure (within habitats). If the distance between source "
+                            "and sink, according to geometrical operations and possibly the application of a "
+                            "probabilistic function (see `FieldDistanceSD` and `EPDistanceSD` inputs), is less than "
+                            "the value of the `MinimumDistanceToField`, the distance is treated for the purpose of "
+                            "calculating drift-deposition as the value of the input. The minimum distance is only "
+                            "applied to sinks whose determined distance is larger than `0`."
             ),
             base.Input(
                 "AgDriftBoomHeight",
-                (attrib.Class(str, 1), attrib.Unit(None, 1), attrib.Scales("global", 1)),
-                self.default_observer
+                (attrib.Class(str), attrib.Unit(None), attrib.Scales("global"), attrib.InList(("low", "high"))),
+                self.default_observer,
+                description="Specifies the boom height for the AgDRIFT model. This input is only in use, if `AgDrift` "
+                            "is used as value of the `SprayDriftModel` input."
             ),
             base.Input(
                 "AgDriftDropletSize",
-                (attrib.Class(str, 1), attrib.Unit(None, 1), attrib.Scales("global", 1)),
-                self.default_observer
+                (attrib.Class(str), attrib.Unit(None), attrib.Scales("global"), attrib.InList(("fine", "medium"))),
+                self.default_observer,
+                description="Specifies the droplet size spectrum for the AgDRIFT model. This input is only in use, if "
+                            "`AgDrift` is used as value of the `SprayDriftModel` input."
             ),
             base.Input(
                 "AgDriftQuantile",
-                (attrib.Class(float, 1), attrib.Unit("1", 1), attrib.Scales("global", 1)),
-                self.default_observer
+                (attrib.Class(float), attrib.Unit("1"), attrib.Scales("global"), attrib.InList((.5, .9))),
+                self.default_observer,
+                description="Specifies the quantile for the AgDRIFT model. This input is only in use, if `AgDrift` "
+                            "is used as value of the `SprayDriftModel` input."
             )
         ])
         self._outputs = base.OutputContainer(self, [base.Output("Exposure", store, self)])
         self._application_rate_unit = None
+        if self.default_observer:
+            self.default_observer.write_message(
+                2,
+                "XSprayDrift currently does not check the identity of applications",
+                "Make sure that inputs of scale other/application retrieve data in the same application-order"
+            )
+            self.default_observer.write_message(
+                3,
+                "The GeometryCrs input will be removed in a future version of the XSprayDrift component",
+                "The CRS will be retrieved from the metadata of the Geometries input"
+            )
+            self.default_observer.write_message(
+                3,
+                "The AppliedFields input will be removed in a future version of the XSprayDrift component",
+                "It is no longer needed and will be removed without replacement"
+            )
 
     def run(self):
         """
