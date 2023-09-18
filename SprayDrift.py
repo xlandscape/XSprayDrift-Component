@@ -20,6 +20,7 @@ class SprayDrift(base.Component):
     """
     # RELEASES
     VERSION = base.VersionCollection(
+        base.VersionInfo("2.5.5", "2023-09-18"),
         base.VersionInfo("2.5.4", "2023-09-13"),
         base.VersionInfo("2.5.3", "2023-09-12"),
         base.VersionInfo("2.5.2", "2023-09-11"),
@@ -152,6 +153,9 @@ class SprayDrift(base.Component):
     VERSION.added("2.5.3", "Repository info to R runtime environment")
     VERSION.added("2.5.4", "Scales to `EPDistanceSD` and `RandomSeed` inputs")
     VERSION.changed("2.5.4", "Report geometries of Exposure output if output scale is base_geometry")
+    VERSION.changed("2.5.5", "Updated component description")
+    VERSION.added("2.5.5", "Input descriptions")
+    VERSION.added("2.5.5", "Runtime warnings and notes regarding status of component and documentation")
 
     def __init__(self, name, observer, store):
         """
