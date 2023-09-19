@@ -1,6 +1,16 @@
 # Changelog
 
-This is the changelog for the XSprayDrift component. It was automatically created on 2023-09-18.
+This is the changelog for the XSprayDrift component. It was automatically created on 2023-09-19.
+
+## [2.5.6] - 2023-09-19
+
+### Added
+
+- Documentation of `Exposure` output
+
+### Changed
+
+### Fixed
 
 ## [2.5.5] - 2023-09-18
 
