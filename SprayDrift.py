@@ -20,6 +20,7 @@ class SprayDrift(base.Component):
     """
     # RELEASES
     VERSION = base.VersionCollection(
+        base.VersionInfo("2.5.6", "2023-09-19"),
         base.VersionInfo("2.5.5", "2023-09-18"),
         base.VersionInfo("2.5.4", "2023-09-13"),
         base.VersionInfo("2.5.3", "2023-09-12"),
@@ -156,6 +157,7 @@ class SprayDrift(base.Component):
     VERSION.changed("2.5.5", "Updated component description")
     VERSION.added("2.5.5", "Input descriptions")
     VERSION.added("2.5.5", "Runtime warnings and notes regarding status of component and documentation")
+    VERSION.added("2.5.6", "Documentation of `Exposure` output")
 
     def __init__(self, name, observer, store):
         """
@@ -489,7 +491,51 @@ class SprayDrift(base.Component):
                             "is used as value of the `SprayDriftModel` input."
             )
         ])
-        self._outputs = base.OutputContainer(self, [base.Output("Exposure", store, self)])
+        self._outputs = base.OutputContainer(
+            self,
+            [
+                base.Output(
+                    "Exposure",
+                    store,
+                    self,
+                    {"calculate_max": True},
+                    "The spray-drift deposition simulated by the component. The component is able to output the "
+                    "deposition at two alternative scales. The selection of spatial output scale is controlled by the "
+                    "value of the `SpatialOutputScale` input, and the shape, chunking element names, offsets and "
+                    "geometries linked with the `Exposure` output change accordingly.",
+                    {
+                        "type": np.ndarray,
+                        "data_type": np.float32,
+                        "scales":
+                            "depending on the value of the `SpatialOutputScale` input, it is `time/day, "
+                            "space_base_geometry` if `SpatialOutputScale` equals `base_geometry`, or "
+                            "`space_y/1sqm, space_x/1sqm, time/day` if `SpatialOutputScale` is `1sqm`",
+                        "shape":
+                            "depending on the value of the `SpatialOutputScale` input, it is the number of "
+                            "simulated days spanned by the `SimulationStart` and `SimulationEnd` inputs times the "
+                            "number of base geometries according to the `Geometries` input if  "
+                            "`SpatialOutputScale` equals `base_geometry`, or the rounded number of meters y-direction "
+                            "times the rounded number of meters in x-direction both spanned by the `Extent` input "
+                            "times the number of days simulated days spanned by the `SimulationStart` and "
+                            "`SimulationEnd` inputs if `SpatialOutputScale` is `1sqm`",
+                        "chunks":
+                            "for fast retrieval of time series if `SpatialOutputScale` equals `base_geometry` and for "
+                            "fast retrieval of maps if `SpatialOutputScale` equals `1sqm`",
+                        "unit": "the same as the unit of the `ApplicationRate` input",
+                        "element_names":
+                            "for scale `space/base_geometries` according to the `Geometries` input if "
+                            "`SpatialOutputScale` equals `base_geometry`",
+                        "offset":
+                            "the simulation start according to the SimulationStart` input for the scale `time/day`, "
+                            "and the origin according to the `Extent` input for the scales `space_x/1sqm` and "
+                            "`space_y/1sqm` if `SpatialOutputScale` equals `1sqm`",
+                        "geometries":
+                            "for scale `space/base_geometries` according to the `Geometries` input if "
+                            "`SpatialOutputScale` equals `base_geometry`"
+                    }
+                )
+            ]
+        )
         self._application_rate_unit = None
         if self.default_observer:
             self.default_observer.write_message(
